@@ -188,8 +188,10 @@ var PlayScene = {
       this.death = this.map.createLayer('Death');
       this.backgroundLayer = this.map.createLayer('BackgroundLayer');
       this._rush = this.game.add.sprite(10,10,'rush');
+      this._rush2 = this.game.add.sprite(100,250,'rush');
 
-this._rush.anchor.setTo(0.5, 0.5)
+
+      this._rush.anchor.setTo(0.5, 0)
       this.groundLayer = this.map.createLayer('GroundLayer');
       //plano de muerte
 
@@ -213,12 +215,14 @@ this._rush.anchor.setTo(0.5, 0.5)
       this._rush.animations.add('jump',
                      Phaser.Animation.generateFrameNames('rush_jump',2,2,'',2),0,false);
       this.configure();
+
   },
 
     //IS called one per frame.
     update: function () {
       //  var moveDirection = new Phaser.Point(0, 0);
-        var collisionWithTilemap = this.game.physics.arcade.collide(this._rush, this.groundLayer);
+       var collisionWithTilemap = this.game.physics.arcade.collide(this._rush, this.groundLayer);
+       var pedropablo = this.game.physics.arcade.collide(this._rush2, this.groundLayer);
         var movement = this.GetMovement();
         //Va a saltar  cuando este pulsando el boton de saltar(utilizamos la funcion que venia)
 console.log(this._rush.body.velocity.y);
@@ -382,9 +386,13 @@ console.log(this._rush.body.velocity.y);
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.game.stage.backgroundColor = '#a9f0ff';
         this.game.physics.arcade.enable(this._rush);
+        this.game.physics.arcade.collide(this._rush2, this.groundLayer);
+        this.game.physics.arcade.enable(this._rush2);
 
         this._rush.body.bounce.y = 0.2;
-        this._rush.body.gravity.y = 3000;
+        this._rush2.body.bounce.y = 0.2;
+        this._rush.body.gravity.y = 3300;
+        this._rush2.body.gravity.y = 300;
         this._rush.body.gravity.x = 0;
         this._rush.body.velocity.x = 0;
         this._rush.x = 10;
