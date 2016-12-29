@@ -189,6 +189,7 @@ var PlayScene = {
       this.backgroundLayer = this.map.createLayer('BackgroundLayer');
       this._rush = this.game.add.sprite(10,10,'rush');
       this._rush.pivot.x = 20;
+
       this.groundLayer = this.map.createLayer('GroundLayer');
       //plano de muerte
 
@@ -216,31 +217,44 @@ var PlayScene = {
 
     //IS called one per frame.
     update: function () {
-        var moveDirection = new Phaser.Point(0, 0);
+      //  var moveDirection = new Phaser.Point(0, 0);
         var collisionWithTilemap = this.game.physics.arcade.collide(this._rush, this.groundLayer);
         var movement = this.GetMovement();
+        //Va a saltar  cuando este pulsando el boton de saltar(utilizamos la funcion que venia)
+console.log(this._rush.body.velocity.y);
+        if(this.isJumping(collisionWithTilemap)){
+          this._playerState = PlayerState.JUMP;
+          this._rush.animations.play('jump');
+          this._rush.body.velocity.y = -900;
+
+        }
+          if(this.isStanding(collisionWithTilemap))this._playerState = PlayerState.RUN;
+          else if(this._playerState == PlayerState.JUMP && this._rush.body.velocity.y < 0)this._playerState = PlayerState.FALLING;
+
         // Cuando está parado sobre un terreno apoyado
-            if(movement === Direction.NONE  && this._playerState != PlayerState.JUMP &&  this._playerState != PlayerState.FALLING){
+             if(movement === Direction.NONE  && this._playerState != PlayerState.JUMP  ){
               this._rush.body.velocity.x = 0;
-              this._rush.body.velocity.y = 0;
+
 
               this._rush.animations.play('stop');
             }
             // Cuando anda hacia la derecha sobre plano
-            else if (movement === Direction.RIGHT && this._playerState != PlayerState.JUMP &&  this._playerState != PlayerState.FALLING )  {
+            else if (movement === Direction.RIGHT && this._playerState != PlayerState.JUMP )  {
                this._rush.body.velocity.x = 300;
-               this._rush.body.velocity.y = 0;
+
+
                this._rush.scale.x = 1;
                this._rush.animations.play('run');
              }
              // Cuando anda hacia la izq sobre un plano
-             else if (movement === Direction.LEFT && this._playerState != PlayerState.JUMP &&  this._playerState != PlayerState.FALLING)  {
+             else if (movement === Direction.LEFT && this._playerState != PlayerState.JUMP )  {
                this._rush.body.velocity.x = -300;
-               this._rush.body.velocity.y = 0;
+
                  this._rush.scale.x = -1;
                this._rush.animations.play('run');
              }
 
+             //Cuando va a saltar
 
         //transitions
         /*
@@ -370,9 +384,12 @@ var PlayScene = {
         this.game.physics.arcade.enable(this._rush);
 
         this._rush.body.bounce.y = 0.2;
-        this._rush.body.gravity.y = 20000;
+        this._rush.body.gravity.y = 3000;
         this._rush.body.gravity.x = 0;
         this._rush.body.velocity.x = 0;
+        this._rush.x = 10;
+        this._rush.y = +290;
+
         this.game.camera.follow(this._rush);
     },
     //move the player
