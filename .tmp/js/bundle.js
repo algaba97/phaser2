@@ -188,8 +188,8 @@ var PlayScene = {
       this.death = this.map.createLayer('Death');
       this.backgroundLayer = this.map.createLayer('BackgroundLayer');
       this._rush = this.game.add.sprite(10,10,'rush');
-      this._rush.pivot.x = 20;
 
+this._rush.anchor.setTo(0.5, 0.5)
       this.groundLayer = this.map.createLayer('GroundLayer');
       //plano de muerte
 
@@ -232,7 +232,7 @@ console.log(this._rush.body.velocity.y);
           else if(this._playerState == PlayerState.JUMP && this._rush.body.velocity.y < 0)this._playerState = PlayerState.FALLING;
 
         // Cuando está parado sobre un terreno apoyado
-             if(movement === Direction.NONE  && this._playerState != PlayerState.JUMP  ){
+            if(movement === Direction.NONE  && this._playerState != PlayerState.JUMP  ){
               this._rush.body.velocity.x = 0;
 
 
@@ -242,14 +242,14 @@ console.log(this._rush.body.velocity.y);
             else if (movement === Direction.RIGHT && this._playerState != PlayerState.JUMP )  {
                this._rush.body.velocity.x = 300;
 
-
+            //  this._rush.pivot.x =10;
                this._rush.scale.x = 1;
                this._rush.animations.play('run');
              }
              // Cuando anda hacia la izq sobre un plano
              else if (movement === Direction.LEFT && this._playerState != PlayerState.JUMP )  {
                this._rush.body.velocity.x = -300;
-
+              //   this._rush.pivot.x =   10;
                  this._rush.scale.x = -1;
                this._rush.animations.play('run');
              }
@@ -391,6 +391,7 @@ console.log(this._rush.body.velocity.y);
         this._rush.y = +290;
 
         this.game.camera.follow(this._rush);
+
     },
     //move the player
     movement: function(point, xMin, xMax){
