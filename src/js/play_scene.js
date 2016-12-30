@@ -61,9 +61,12 @@ var PlayScene = {
       //  var moveDirection = new Phaser.Point(0, 0);
        var collisionWithTilemap = this.game.physics.arcade.collide(this._rush, this.groundLayer);
        var pedropablo = this.game.physics.arcade.collide(this._rush2, this.groundLayer);
+  //     var marcoantonio = this.game.physics.arcade.collide(this._rush2, this._rush);
         var movement = this.GetMovement();
         //Va a saltar  cuando este pulsando el boton de saltar(utilizamos la funcion que venia)
-console.log(this._rush.body.velocity.y);
+        if(this.game.physics.arcade.collide(this._rush2, this._rush)){
+          console.log("Choca");
+        }
         if(this.isJumping(collisionWithTilemap)){
           this._playerState = PlayerState.JUMP;
           this._rush.animations.play('jump');
