@@ -53,6 +53,8 @@ var PlayScene = {
       this._rush.animations.add('jump',
                      Phaser.Animation.generateFrameNames('rush_jump',2,2,'',2),0,false);
       this.configure();
+      this.enemys  = new Array();
+      this.enemys.push(this._rush2);
 
   },
 
@@ -60,7 +62,10 @@ var PlayScene = {
     update: function () {
       //  var moveDirection = new Phaser.Point(0, 0);
        var collisionWithTilemap = this.game.physics.arcade.collide(this._rush, this.groundLayer);
-       var pedropablo = this.game.physics.arcade.collide(this._rush2, this.groundLayer);
+       for( var i = 0; i < this.enemys.length; i++){
+        this.game.physics.arcade.collide(this.enemys[i], this.groundLayer);
+       }
+       //var collisionWithEnemy = this.game.physics.arcade.collide(this._rush2, this.groundLayer);
   //     var marcoantonio = this.game.physics.arcade.collide(this._rush2, this._rush);
         var movement = this.GetMovement();
         //Va a saltar  cuando este pulsando el boton de saltar(utilizamos la funcion que venia)
@@ -190,8 +195,12 @@ var PlayScene = {
         this.destruir();
 
     },
+    //Funcion que mira quien se muere en caso de colision del personaje con un enemigo
 
-    checkPlayerFell: function(){
+    colEnemy: function(collisionWithEnemy,enemigo){
+    },
+
+  checkPlayerFell: function(){
 
         if(this.game.physics.arcade.collide(this._rush, this.death)){
                //
@@ -237,7 +246,7 @@ var PlayScene = {
         this._rush.body.gravity.x = 0;
         this._rush.body.velocity.x = 0;
         this._rush.x = 10;
-        this._rush.y = +290;
+      //  this._rush.y = +290;
 
         this.game.camera.follow(this._rush);
 
