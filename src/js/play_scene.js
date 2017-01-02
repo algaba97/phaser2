@@ -25,7 +25,7 @@ var PlayScene = {
       this._rush = this.game.add.sprite(10,10,'rush');
       this._rush2 = this.game.add.sprite(100,250,'enemigo');
 
-      this._rush.anchor.setTo(0.5, 0);
+      this._rush.anchor.setTo(0.6, 0);
       //plano de muerte
 
 
@@ -73,7 +73,7 @@ var PlayScene = {
        var collisionWithTilemap = this.game.physics.arcade.collide(this._rush, this.groundLayer);
        for( var i = 0; i < this.enemys.length; i++){
         this.game.physics.arcade.collide(this.enemys[i], this.groundLayer);
-        this.game.physics.arcade.collide(this.enemys[i], this._rush);
+        //this.game.physics.arcade.collide(this.enemys[i], this._rush);
        }
        //var collisionWithEnemy = this.game.physics.arcade.collide(this._rush2, this.groundLayer);
   //     var marcoantonio = this.game.physics.arcade.collide(this._rush2, this._rush);
@@ -242,7 +242,7 @@ var PlayScene = {
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.game.stage.backgroundColor = '#a9f0ff';
         this.game.physics.arcade.enable(this._rush);
-        this.game.physics.arcade.collide(this._rush2, this.groundLayer);
+      //  this.game.physics.arcade.collide(this._rush2, this.groundLayer);
         this.game.physics.arcade.enable(this._rush2);
 
         this._rush.body.bounce.y = 0.2;
@@ -251,7 +251,7 @@ var PlayScene = {
         this._rush.body.gravity.x = 0;
         this._rush.body.velocity.x = 0;
         this._rush.x = 10;
-        for( var i = 0; i < this.enemys.length; i++)this.enemys[i].body.gravity.y = 300;
+        for( var i = 0; i < this.enemys.length; i++)this.enemys[i].body.gravity.y = 3000;
 
 
       //  this._rush.y = +290;
