@@ -20,14 +20,8 @@ function mapa (JSON, nivel){
      nivel.death.setScale(3,3);
 
      nivel.groundLayer.resizeWorld();
-    }
-function destruir(nivel){
-  nivel.mapa.destroy();
-  nivel.groundLayer.destroy();
-  nivel.backgroundLayer.destroy();
-  nivel.death.destroy();
-}
+   }
+
 module.exports = {
 mapa: mapa
-mapa: destruir
 };

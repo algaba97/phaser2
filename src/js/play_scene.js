@@ -248,12 +248,12 @@ var PlayScene = {
 
     //TODO 9 destruir los recursos tilemap, tiles y logo.
     destruir:function(){
-      mapa.destruir(PlayScene.nivel);
-/*
-       this.map.destroy();
+
+
+       this.mapa.destroy();
        this.groundLayer.destroy();
        this.backgroundLayer.destroy();
-       */
+
        this._rush.destroy();
     }
 

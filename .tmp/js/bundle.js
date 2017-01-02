@@ -154,7 +154,7 @@ function mapa (JSON, nivel){
      nivel.death.setScale(3,3);
 
      nivel.groundLayer.resizeWorld();
-    }
+   }
 
 module.exports = {
 mapa: mapa
@@ -439,11 +439,12 @@ var PlayScene = {
 
     //TODO 9 destruir los recursos tilemap, tiles y logo.
     destruir:function(){
-/*
-       this.map.destroy();
+
+
+       this.mapa.destroy();
        this.groundLayer.destroy();
        this.backgroundLayer.destroy();
-       */
+
        this._rush.destroy();
     }
 
