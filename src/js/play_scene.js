@@ -1,9 +1,9 @@
 'use strict';
-
+var mapa = require('./mapa');
 //Enumerados: PlayerState son los estado por los que pasa el player. Directions son las direcciones a las que se puede
 //mover el player.
-var PlayerState = {'JUMP':0, 'RUN':1, 'FALLING':2, 'STOP':3}
-var Direction = {'LEFT':0, 'RIGHT':1, 'NONE':3}
+var PlayerState = {'JUMP':0, 'RUN':1, 'FALLING':2, 'STOP':3};
+var Direction = {'LEFT':0, 'RIGHT':1, 'NONE':3};
 
 //Scena de juego.
 var PlayScene = {
@@ -12,7 +12,8 @@ var PlayScene = {
     _jumpSpeed: 600, //velocidad de salto
     _jumpHight: 150, //altura máxima del salto.
     _playerState: PlayerState.STOP, //estado del player
-    _direction: Direction.NONE,  //dirección inicial del player. NONE es ninguna dirección.
+    _direction: Direction.NONE,
+    nivel: 'tilemap',  //dirección inicial del player. NONE es ninguna dirección.
 
     //Método constructor...
   create: function () {
@@ -20,30 +21,16 @@ var PlayScene = {
       //TODO 5 Creamos a rush 'rush'  con el sprite por defecto en el 10, 10 con la animación por defecto 'rush_idle01'
 
       //TODO 4: Cargar el tilemap 'tilemap' y asignarle al tileset 'patrones' la imagen de sprites 'tiles'
-      this.map = this.game.add.tilemap('tilemap');
-      this.map.addTilesetImage('monsterboy_assets', 'tiles');
-      //Creacion de las layers
-      this.death = this.map.createLayer('Death');
-      this.backgroundLayer = this.map.createLayer('BackgroundLayer');
+      this.map = new mapa.mapa(PlayScene.nivel, this);
       this._rush = this.game.add.sprite(10,10,'rush');
       this._rush2 = this.game.add.sprite(100,250,'rush');
 
-
-      this._rush.anchor.setTo(0.5, 0)
-      this.groundLayer = this.map.createLayer('GroundLayer');
+      this._rush.anchor.setTo(0.5, 0);
       //plano de muerte
 
 
       //Colisiones con el plano de muerte y con el plano de muerte y con suelo.
-      this.map.setCollisionBetween(1, 5000, true, 'Death');
-      this.map.setCollisionBetween(1, 5000, true, 'GroundLayer');
-      this.death.visible = false;
-      //Cambia la escala a x3.
-      this.groundLayer.setScale(3,3);
-      this.backgroundLayer.setScale(3,3);
-      this.death.setScale(3,3);
-
-      this.groundLayer.resizeWorld(); //resize world and adjust to the screen
+    //resize world and adjust to the screen
 
       //nombre de la animación, frames, framerate, isloop
       this._rush.animations.add('run',
@@ -64,14 +51,12 @@ var PlayScene = {
        var collisionWithTilemap = this.game.physics.arcade.collide(this._rush, this.groundLayer);
        for( var i = 0; i < this.enemys.length; i++){
         this.game.physics.arcade.collide(this.enemys[i], this.groundLayer);
+        this.game.physics.arcade.collide(this.enemys[i], this._rush);
        }
        //var collisionWithEnemy = this.game.physics.arcade.collide(this._rush2, this.groundLayer);
   //     var marcoantonio = this.game.physics.arcade.collide(this._rush2, this._rush);
         var movement = this.GetMovement();
         //Va a saltar  cuando este pulsando el boton de saltar(utilizamos la funcion que venia)
-        if(this.game.physics.arcade.collide(this._rush2, this._rush)){
-          console.log("Choca");
-        }
         if(this.isJumping(collisionWithTilemap)){
           this._playerState = PlayerState.JUMP;
           this._rush.animations.play('jump');
@@ -197,7 +182,8 @@ var PlayScene = {
     },
     //Funcion que mira quien se muere en caso de colision del personaje con un enemigo
 
-    colEnemy: function(collisionWithEnemy,enemigo){
+    colEnemy: function(rush,enemys){
+
     },
 
   checkPlayerFell: function(){
@@ -262,10 +248,12 @@ var PlayScene = {
 
     //TODO 9 destruir los recursos tilemap, tiles y logo.
     destruir:function(){
-
+      mapa.destruir(PlayScene.nivel);
+/*
        this.map.destroy();
        this.groundLayer.destroy();
        this.backgroundLayer.destroy();
+       */
        this._rush.destroy();
     }
 
