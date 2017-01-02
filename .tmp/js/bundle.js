@@ -64,12 +64,12 @@ var BootScene = {
 var PreloaderScene = {
   preload: function () {
     this.loadingBar = this.game.add.sprite(100,300, 'preloader_bar');
-    this.loadingBar.anchor.setTo(0, 0.5); 
+    this.loadingBar.anchor.setTo(0, 0.5);
     this.game.load.setPreloadSprite(this.loadingBar);
     this.game.stage.backgroundColor = "#000000";
-    
-    
-    
+
+
+
     this.load.onLoadStart.add(this.loadStart, this);
     //TODO 2.1 Cargar el tilemap images/map.json con el nombre de la cache 'tilemap'.
       //la imagen 'images/simples_pimples.png' con el nombre de la cache 'tiles' y
@@ -78,6 +78,8 @@ var PreloaderScene = {
       this.game.load.tilemap('tilemap','images/map3.json',null,Phaser.Tilemap.TILED_JSON);
       this.game.load.image('tiles','images/nuevo.png');
       this.game.load.atlas('rush', 'images/rush_spritesheet.png','images/rush_spritesheet.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+// cargar el enemigo
+    this.game.load.image('enemigo','images/enemigo.png');
       //TODO 2.2a Escuchar el evento onLoadComplete con el método loadComplete que el state 'play'
       this.load.onLoadComplete.add(this.loadComplete,this);
 
@@ -87,13 +89,13 @@ var PreloaderScene = {
     //this.game.state.start('play');
     console.log("Game Assets Loading ...");
   },
-    
-    
+
+
      //TODO 2.2b function loadComplete()
     loadComplete : function (){
       this.game.state.start('play');
     },
-    
+
     update : function(){
         this._loadingBar
     }
@@ -101,18 +103,18 @@ var PreloaderScene = {
 
 
 var wfconfig = {
- 
-    active: function() { 
+
+    active: function() {
         console.log("font loaded");
         init();
     },
- 
+
     google: {
         families: ['Sniglet']
     }
- 
+
 };
- 
+
 //TODO 3.2 Cargar Google font cuando la página esté cargada con wfconfig.
 //TODO 3.3 La creación del juego y la asignación de los states se hará en el método init().
 function init() {
@@ -124,11 +126,11 @@ function init() {
   game.state.add('gameOver',gameover_scene);
   //TODO 1.2 Añadir los states 'boot' BootScene, 'menu' MenuScene, 'preloader' PreloaderScene, 'play' PlayScene, 'gameOver' GameOver.
   game.state.start('boot');
-//TODO 1.3 iniciar el state 'boot'. 
+//TODO 1.3 iniciar el state 'boot'.
 };
 
 window.onload = function () {
-  WebFont.load(wfconfig);    
+  WebFont.load(wfconfig);
 };
 
 },{"./gameover_scene.js":1,"./menu_scene.js":4,"./play_scene.js":5}],3:[function(require,module,exports){
@@ -214,7 +216,7 @@ var PlayScene = {
       //TODO 4: Cargar el tilemap 'tilemap' y asignarle al tileset 'patrones' la imagen de sprites 'tiles'
       this.map = new mapa.mapa(PlayScene.nivel, this);
       this._rush = this.game.add.sprite(10,10,'rush');
-      this._rush2 = this.game.add.sprite(100,250,'rush');
+      this._rush2 = this.game.add.sprite(100,250,'enemigo');
 
       this._rush.anchor.setTo(0.5, 0);
       //plano de muerte
@@ -230,15 +232,37 @@ var PlayScene = {
                     Phaser.Animation.generateFrameNames('rush_idle',1,1,'',2),0,false);
       this._rush.animations.add('jump',
                      Phaser.Animation.generateFrameNames('rush_jump',2,2,'',2),0,false);
-      this.configure();
       this.enemys  = new Array();
-      this.enemys.push(this._rush2);
+    this.enemys.push(this._rush2);
+      this.configure();
+
 
   },
+  colision: function() {
 
+    for( var i = 0; i < this.enemys.length; i++){
+
+      if(this.game.physics.arcade.collide(this.enemys[i], this._rush)){
+        console.log(this.enemys[i].y);
+        console.log(this._rush.y);
+      if((this.enemys[i].y-40 )< this._rush.y){
+        console.log("1");
+         this.onPlayerFell();
+      // Habrá que variarlo si cambian el tamaño de los sprites
+       }
+      else {
+        console.log("2");
+       this.enemys[i].destroy();
+        }
+      }
+    }
+  },
     //IS called one per frame.
     update: function () {
+
       //  var moveDirection = new Phaser.Point(0, 0);
+
+
        var collisionWithTilemap = this.game.physics.arcade.collide(this._rush, this.groundLayer);
        for( var i = 0; i < this.enemys.length; i++){
         this.game.physics.arcade.collide(this.enemys[i], this.groundLayer);
@@ -357,6 +381,7 @@ var PlayScene = {
         this.movement(moveDirection,5,
                       this.backgroundLayer.layer.widthInPixels*this.backgroundLayer.scale.x - 10);
                       */
+        this.colision();
         this.checkPlayerFell();
     },
 
@@ -367,13 +392,10 @@ var PlayScene = {
 
     onPlayerFell: function(){
         //TODO 6 Carga de 'gameOver';
+        console.log("llega");
         this.game.state.start('gameOver');
         this.destruir();
-
-    },
-    //Funcion que mira quien se muere en caso de colision del personaje con un enemigo
-
-    colEnemy: function(rush,enemys){
+        console.log("llega mas");
 
     },
 
@@ -417,12 +439,14 @@ var PlayScene = {
         this.game.physics.arcade.enable(this._rush2);
 
         this._rush.body.bounce.y = 0.2;
-        this._rush2.body.bounce.y = 0.2;
         this._rush.body.gravity.y = 3300;
-        this._rush2.body.gravity.y = 300;
+
         this._rush.body.gravity.x = 0;
         this._rush.body.velocity.x = 0;
         this._rush.x = 10;
+        for( var i = 0; i < this.enemys.length; i++)this.enemys[i].body.gravity.y = 300;
+
+
       //  this._rush.y = +290;
 
         this.game.camera.follow(this._rush);
@@ -440,7 +464,7 @@ var PlayScene = {
     //TODO 9 destruir los recursos tilemap, tiles y logo.
     destruir:function(){
 
-
+console.log("llega aun mas");
        this.mapa.destroy();
        this.groundLayer.destroy();
        this.backgroundLayer.destroy();
