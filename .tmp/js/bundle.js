@@ -1,4 +1,75 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+'use strict';
+var Direction= {'LEFT':0, 'RIGTH':1, 'NONE':3};
+var PlayerState = {'JUMP':0, 'RUN':1, 'FALLING':2, 'STOP':3};
+var party = {enemigo : 0, personaje : 1, entidad: -1};
+//entidad
+function Entidad(nombre,x,y,party,escena){
+  this.sprite = escena.game.add.sprite(x, y, nombre);
+  escena.game.physics.arcade.enable(this.sprite);
+  this.sprite.anchor.setTo(0.6,0);
+  this.sprite.body.bounce.y = 0.2;
+  this.sprite.body.gravity.y = 3300;
+  this.sprite.body.gravity.x = 0;
+  this.sprite.body.velocity.x = 0;
+  this.party = party || party.entidad;
+
+};//Fin de la entidad
+
+function Personaje(x,y,escena){
+  Entidad.apply(this, ['enemigo',x, y, party.personaje,escena]);
+  this.movimiento = Direction.NONE;
+  this.estado = PlayerState.FALLING;
+  this.canJump = function(collisionWithTilemap){
+    return this.isStanding() && collisionWithTilemap ||this._jamping
+  };
+  this.isStanding = function(){
+    return this.sprite.body.blocked.down || this.sprite.body.touching.down;
+  };
+
+  this.mov = function(wasJumping,movement){
+    this.movimiento = movement;
+    //console.log(wasJumping);
+  //  console.log('Player estate',this.estado );
+  //  console.log('Player direcion',this.movimiento );
+  if(wasJumping){
+
+          this.estado = PlayerState.JUMP;
+          this.sprite.body.velocity.y = -900;
+
+        }
+  if(this.estado === PlayerState.JUMP && this.sprite.body.velocity.y < 0)
+   this.estado = PlayerState.FALLING;
+    if(this.movimiento === Direction.NONE){
+    this.sprite.body.velocity.x=0;
+    }
+    else if(this.movimiento === Direction.RIGTH){
+      this.sprite.body.velocity.x=300;
+       this.sprite.scale.x = -1;
+    }
+    else if(this.movimiento === Direction.LEFT){
+      this.sprite.body.velocity.x=-300;
+       this.sprite.scale.x = 1;
+    }
+
+
+  };
+
+};//Fin del personaje
+
+
+
+
+
+Personaje.prototype = Object.create(Entidad.prototype);
+Personaje.prototype.constructor = Personaje;
+
+module.exports = {
+  Entidad: Entidad,
+  Personaje: Personaje
+};
+
+},{}],2:[function(require,module,exports){
 var GameOver = {
     create: function () {
         console.log("Game Over");
@@ -35,7 +106,7 @@ var GameOver = {
 };
 
 module.exports = GameOver;
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 'use strict';
 
 //TODO 1.1 Require de las escenas, play_scene, gameover_scene y menu_scene.
@@ -133,7 +204,7 @@ window.onload = function () {
   WebFont.load(wfconfig);
 };
 
-},{"./gameover_scene.js":1,"./menu_scene.js":4,"./play_scene.js":5}],3:[function(require,module,exports){
+},{"./gameover_scene.js":2,"./menu_scene.js":5,"./play_scene.js":6}],4:[function(require,module,exports){
 'use strict';
 function mapa (JSON, nivel){
 
@@ -162,7 +233,7 @@ module.exports = {
 mapa: mapa
 };
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 var MenuScene = {
 
     create: function () {
@@ -190,9 +261,10 @@ var MenuScene = {
 };
 
 module.exports = MenuScene;
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
 var mapa = require('./mapa');
+var entidades = require('./entidades.js');
 //Enumerados: PlayerState son los estado por los que pasa el player. Directions son las direcciones a las que se puede
 //mover el player.
 var PlayerState = {'JUMP':0, 'RUN':1, 'FALLING':2, 'STOP':3};
@@ -215,13 +287,14 @@ var PlayScene = {
 
       //TODO 4: Cargar el tilemap 'tilemap' y asignarle al tileset 'patrones' la imagen de sprites 'tiles'
       this.map = new mapa.mapa(PlayScene.nivel, this);
-      this._rush = this.game.add.sprite(10,10,'rush');
+  //    this._rush = this.game.add.sprite(10,10,'rush');
+     this._rush = new entidades.Personaje(10,100, this);
       this._rush2 = this.game.add.sprite(100,250,'enemigo');
 
-      this._rush.anchor.setTo(0.6, 0);
+  //    this._rush.anchor.setTo(0.6, 0);
       //plano de muerte
 
-
+/*
       //Colisiones con el plano de muerte y con el plano de muerte y con suelo.
     //resize world and adjust to the screen
 
@@ -232,6 +305,7 @@ var PlayScene = {
                     Phaser.Animation.generateFrameNames('rush_idle',1,1,'',2),0,false);
       this._rush.animations.add('jump',
                      Phaser.Animation.generateFrameNames('rush_jump',2,2,'',2),0,false);
+                     */
       this.enemys  = new Array();
     this.enemys.push(this._rush2);
       this.configure();
@@ -242,10 +316,10 @@ var PlayScene = {
 
     for( var i = 0; i < this.enemys.length; i++){
 
-      if(this.game.physics.arcade.collide(this.enemys[i], this._rush)){
+      if(this.game.physics.arcade.collide(this.enemys[i], this._rush.sprite)){
         console.log(this.enemys[i].y);
-        console.log(this._rush.y);
-      if((this.enemys[i].y-40 )< this._rush.y){
+        console.log(this._rush.sprite.y);
+      if((this.enemys[i].y-40 )< this._rush.sprite.y){
         console.log("1");
          this.onPlayerFell();
       // Habrá que variarlo si cambian el tamaño de los sprites
@@ -263,46 +337,21 @@ var PlayScene = {
       //  var moveDirection = new Phaser.Point(0, 0);
 
 
-       var collisionWithTilemap = this.game.physics.arcade.collide(this._rush, this.groundLayer);
+       var collisionWithTilemap = this.game.physics.arcade.collide(this._rush.sprite, this.groundLayer);
        for( var i = 0; i < this.enemys.length; i++){
         this.game.physics.arcade.collide(this.enemys[i], this.groundLayer);
         //this.game.physics.arcade.collide(this.enemys[i], this._rush);
        }
        //var collisionWithEnemy = this.game.physics.arcade.collide(this._rush2, this.groundLayer);
   //     var marcoantonio = this.game.physics.arcade.collide(this._rush2, this._rush);
-        var movement = this.GetMovement();
+
+
+
         //Va a saltar  cuando este pulsando el boton de saltar(utilizamos la funcion que venia)
-        if(this.isJumping(collisionWithTilemap)){
-          this._playerState = PlayerState.JUMP;
-          this._rush.animations.play('jump');
-          this._rush.body.velocity.y = -900;
-
-        }
-          if(this.isStanding(collisionWithTilemap))this._playerState = PlayerState.RUN;
-          else if(this._playerState == PlayerState.JUMP && this._rush.body.velocity.y < 0)this._playerState = PlayerState.FALLING;
-
-        // Cuando está parado sobre un terreno apoyado
-            if(movement === Direction.NONE  && this._playerState != PlayerState.JUMP  ){
-              this._rush.body.velocity.x = 0;
+    //console.log(this.isJumping(collisionWithTilemap));
+        this._rush.mov(this.isJumping(collisionWithTilemap),  this.GetMovement());
 
 
-              this._rush.animations.play('stop');
-            }
-            // Cuando anda hacia la derecha sobre plano
-            else if (movement === Direction.RIGHT && this._playerState != PlayerState.JUMP )  {
-               this._rush.body.velocity.x = 300;
-
-            //  this._rush.pivot.x =10;
-               this._rush.scale.x = 1;
-               this._rush.animations.play('run');
-             }
-             // Cuando anda hacia la izq sobre un plano
-             else if (movement === Direction.LEFT && this._playerState != PlayerState.JUMP )  {
-               this._rush.body.velocity.x = -300;
-              //   this._rush.pivot.x =   10;
-                 this._rush.scale.x = -1;
-               this._rush.animations.play('run');
-             }
 
              //Cuando va a saltar
 
@@ -386,9 +435,6 @@ var PlayScene = {
     },
 
 
-    canJump: function(collisionWithTilemap){
-        return this.isStanding() && collisionWithTilemap || this._jamping;
-    },
 
     onPlayerFell: function(){
         //TODO 6 Carga de 'gameOver';
@@ -401,23 +447,18 @@ var PlayScene = {
 
   checkPlayerFell: function(){
 
-        if(this.game.physics.arcade.collide(this._rush, this.death)){
+        if(this.game.physics.arcade.collide(this._rush.sprite, this.death)){
                //
             this.onPlayerFell();
         }
     },
-
-    isStanding: function(){
-        return this._rush.body.blocked.down || this._rush.body.touching.down
-    },
-
     isJumping: function(collisionWithTilemap){
-        return this.canJump(collisionWithTilemap) &&
+        return this._rush.canJump(collisionWithTilemap) &&
             this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR);
     },
 
     GetMovement: function(){
-        var movement = Direction.NONE
+        var movement = Direction.NONE;
         //Move Right
         if(this.game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)){
             movement = Direction.RIGHT;
@@ -434,22 +475,22 @@ var PlayScene = {
         this.game.world.setBounds(0, 0, 2400, 160);
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.game.stage.backgroundColor = '#a9f0ff';
-        this.game.physics.arcade.enable(this._rush);
+      //  this.game.physics.arcade.enable(this._rush);
       //  this.game.physics.arcade.collide(this._rush2, this.groundLayer);
         this.game.physics.arcade.enable(this._rush2);
 
-        this._rush.body.bounce.y = 0.2;
-        this._rush.body.gravity.y = 3300;
-
-        this._rush.body.gravity.x = 0;
-        this._rush.body.velocity.x = 0;
-        this._rush.x = 10;
+      //  this._rush.body.bounce.y = 0.2;
+    //    this._rush.body.gravity.y = 3300;
+//
+    //    this._rush.body.gravity.x = 0;
+    //    this._rush.body.velocity.x = 0;
+    //    this._rush.x = 10;
         for( var i = 0; i < this.enemys.length; i++)this.enemys[i].body.gravity.y = 3000;
 
 
       //  this._rush.y = +290;
 
-        this.game.camera.follow(this._rush);
+        this.game.camera.follow(this._rush.sprite);
 
     },
     //move the player
@@ -469,11 +510,11 @@ console.log("llega aun mas");
        this.groundLayer.destroy();
        this.backgroundLayer.destroy();
 
-       this._rush.destroy();
+       this._rush.sprite.destroy();
     }
 
 };
 
 module.exports = PlayScene;
 
-},{"./mapa":3}]},{},[2]);
+},{"./entidades.js":1,"./mapa":4}]},{},[3]);
