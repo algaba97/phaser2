@@ -55,15 +55,44 @@ function Personaje(x,y,escena){
   };
 
 };//Fin del personaje
-
-
-
-
-
 Personaje.prototype = Object.create(Entidad.prototype);
 Personaje.prototype.constructor = Personaje;
 
+function Enemigo(x,y,escena,principio,fin){
+    Entidad.apply(this, ['enemigo',x, y, party.enemigo,escena]);
+    this.principio= principio;
+    this.final= fin;
+    this.direction= Direction.RIGTH;
+    console.log(  this.direction);
+    this.sprite.scale.x = -1;
+this.update= function(){
+  console.log('Posicion',this.sprite.x);
+  console.log('Principio',this.principio);
+  console.log('Final',this.final);
+    if(this.direccion != Direction.NONE)
+    {
+      if(this.sprite.x < this.principio) {
+      this.sprite.scale.x = -1;
+        this.direction = Direction.RIGTH;
+      }
+      else if(this.sprite.x > this.final ){
+        console.log("HA llegado a que gire cacho");
+     this.sprite.scale.x = 1;
+       this.direction = Direction.LEFT;
+       console.log(this.direction);
+     }
+   }
+
+   if(this.direction === Direction.RIGTH)this.sprite.body.velocity.x = 120;
+   else if(this.direction === Direction. LEFT)this.sprite.body.velocity.x = -120;
+ };
+ };//Fin del enemigo
+ Enemigo.prototype = Object.create(Entidad.prototype);
+ Enemigo.prototype.constructor = Enemigo;
+
+
 module.exports = {
   Entidad: Entidad,
-  Personaje: Personaje
+  Personaje: Personaje,
+  Enemigo: Enemigo
 };

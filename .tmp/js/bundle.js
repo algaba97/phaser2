@@ -56,17 +56,46 @@ function Personaje(x,y,escena){
   };
 
 };//Fin del personaje
-
-
-
-
-
 Personaje.prototype = Object.create(Entidad.prototype);
 Personaje.prototype.constructor = Personaje;
 
+function Enemigo(x,y,escena,principio,fin){
+    Entidad.apply(this, ['enemigo',x, y, party.enemigo,escena]);
+    this.principio= principio;
+    this.final= fin;
+    this.direction= Direction.RIGTH;
+    console.log(  this.direction);
+    this.sprite.scale.x = -1;
+this.update= function(){
+  console.log('Posicion',this.sprite.x);
+  console.log('Principio',this.principio);
+  console.log('Final',this.final);
+    if(this.direccion != Direction.NONE)
+    {
+      if(this.sprite.x < this.principio) {
+      this.sprite.scale.x = -1;
+        this.direction = Direction.RIGTH;
+      }
+      else if(this.sprite.x > this.final ){
+        console.log("HA llegado a que gire cacho");
+     this.sprite.scale.x = 1;
+       this.direction = Direction.LEFT;
+       console.log(this.direction);
+     }
+   }
+
+   if(this.direction === Direction.RIGTH)this.sprite.body.velocity.x = 120;
+   else if(this.direction === Direction. LEFT)this.sprite.body.velocity.x = -120;
+ };
+ };//Fin del enemigo
+ Enemigo.prototype = Object.create(Entidad.prototype);
+ Enemigo.prototype.constructor = Enemigo;
+
+
 module.exports = {
   Entidad: Entidad,
-  Personaje: Personaje
+  Personaje: Personaje,
+  Enemigo: Enemigo
 };
 
 },{}],2:[function(require,module,exports){
@@ -289,7 +318,8 @@ var PlayScene = {
       this.map = new mapa.mapa(PlayScene.nivel, this);
   //    this._rush = this.game.add.sprite(10,10,'rush');
      this._rush = new entidades.Personaje(10,100, this);
-      this._rush2 = this.game.add.sprite(100,250,'enemigo');
+    //  this._rush2 = this.game.add.sprite(100,250,'enemigo');
+      this._rush2 = new entidades.Enemigo(100,250,this,100,250);
 
   //    this._rush.anchor.setTo(0.6, 0);
       //plano de muerte
@@ -316,17 +346,18 @@ var PlayScene = {
 
     for( var i = 0; i < this.enemys.length; i++){
 
-      if(this.game.physics.arcade.collide(this.enemys[i], this._rush.sprite)){
-        console.log(this.enemys[i].y);
-        console.log(this._rush.sprite.y);
-      if((this.enemys[i].y-40 )< this._rush.sprite.y){
-        console.log("1");
+      if(this.game.physics.arcade.collide(this.enemys[i].sprite, this._rush.sprite)){
+
+      if((this.enemys[i].sprite.y-40 )< this._rush.sprite.y){
+
          this.onPlayerFell();
       // Habrá que variarlo si cambian el tamaño de los sprites
        }
       else {
-        console.log("2");
-       this.enemys[i].destroy();
+//Falta eliminarlo del array
+       this.enemys[i].sprite.destroy();
+      
+       this.enemys.splice(i,1);
         }
       }
     }
@@ -339,7 +370,8 @@ var PlayScene = {
 
        var collisionWithTilemap = this.game.physics.arcade.collide(this._rush.sprite, this.groundLayer);
        for( var i = 0; i < this.enemys.length; i++){
-        this.game.physics.arcade.collide(this.enemys[i], this.groundLayer);
+        this.game.physics.arcade.collide(this.enemys[i].sprite, this.groundLayer);
+        this.enemys[i].update();
         //this.game.physics.arcade.collide(this.enemys[i], this._rush);
        }
        //var collisionWithEnemy = this.game.physics.arcade.collide(this._rush2, this.groundLayer);
@@ -477,7 +509,7 @@ var PlayScene = {
         this.game.stage.backgroundColor = '#a9f0ff';
       //  this.game.physics.arcade.enable(this._rush);
       //  this.game.physics.arcade.collide(this._rush2, this.groundLayer);
-        this.game.physics.arcade.enable(this._rush2);
+        //this.game.physics.arcade.enable(this._rush2);
 
       //  this._rush.body.bounce.y = 0.2;
     //    this._rush.body.gravity.y = 3300;
@@ -485,7 +517,7 @@ var PlayScene = {
     //    this._rush.body.gravity.x = 0;
     //    this._rush.body.velocity.x = 0;
     //    this._rush.x = 10;
-        for( var i = 0; i < this.enemys.length; i++)this.enemys[i].body.gravity.y = 3000;
+      //  for( var i = 0; i < this.enemys.length; i++)this.enemys[i].body.gravity.y = 3000;
 
 
       //  this._rush.y = +290;
