@@ -39,6 +39,8 @@ var PlayScene = {
       this.map.setCollisionBetween(1, 5000, true, 'GroundLayer');
       this.death.visible = false;
       //Cambia la escala a x3.
+      //en el mapa 3 las escalas son las x2
+      //en los demas mapas al x3
       this.groundLayer.setScale(3,3);
       this.backgroundLayer.setScale(3,3);
       this.death.setScale(3,3);
