@@ -24,7 +24,7 @@ var PlayScene = {
       //TODO 4: Cargar el tilemap 'tilemap' y asignarle al tileset 'patrones' la imagen de sprites 'tiles'
       this.map = new mapa.mapa(PlayScene.nivel, this);
   //    this._rush = this.game.add.sprite(10,10,'rush');
-     this._rush = new entidades.Personaje(10,100, this);
+     this._rush = new entidades.Personaje(10,250, this);
     //  this._rush2 = this.game.add.sprite(100,250,'enemigo');
       this._rush2 = new entidades.Enemigo(100,250,this,100,250);
 
