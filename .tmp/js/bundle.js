@@ -175,7 +175,7 @@ var PreloaderScene = {
       //la imagen 'images/simples_pimples.png' con el nombre de la cache 'tiles' y
       // el atlasJSONHash con 'images/rush_spritesheet.png' como imagen y 'images/rush_spritesheet.json'
       //como descriptor de la animación.
-      this.game.load.tilemap('tilemap','images/map3.json',null,Phaser.Tilemap.TILED_JSON);
+      this.game.load.tilemap('tilemap','images/mapa2(nuevo).json',null,Phaser.Tilemap.TILED_JSON);
       this.game.load.image('tiles','images/nuevo.png');
       this.game.load.atlas('rush', 'images/rush_spritesheet.png','images/rush_spritesheet.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
 // cargar el enemigo
@@ -326,7 +326,21 @@ var PlayScene = {
 
 /*
       //Colisiones con el plano de muerte y con el plano de muerte y con suelo.
+
+      this.map.setCollisionBetween(1, 5000, true, 'Death');
+      this.map.setCollisionBetween(1, 5000, true, 'GroundLayer');
+      this.death.visible = false;
+      //Cambia la escala a x3.
+      //en el mapa 3 las escalas son las x2
+      //en los demas mapas al x3
+      this.groundLayer.setScale(3,3);
+      this.backgroundLayer.setScale(3,3);
+      this.death.setScale(3,3);
+
+      this.groundLayer.resizeWorld(); //resize world and adjust to the screen
+
     //resize world and adjust to the screen
+
 
       //nombre de la animación, frames, framerate, isloop
       this._rush.animations.add('run',

@@ -33,7 +33,21 @@ var PlayScene = {
 
 /*
       //Colisiones con el plano de muerte y con el plano de muerte y con suelo.
+
+      this.map.setCollisionBetween(1, 5000, true, 'Death');
+      this.map.setCollisionBetween(1, 5000, true, 'GroundLayer');
+      this.death.visible = false;
+      //Cambia la escala a x3.
+      //en el mapa 3 las escalas son las x2
+      //en los demas mapas al x3
+      this.groundLayer.setScale(3,3);
+      this.backgroundLayer.setScale(3,3);
+      this.death.setScale(3,3);
+
+      this.groundLayer.resizeWorld(); //resize world and adjust to the screen
+
     //resize world and adjust to the screen
+
 
       //nombre de la animación, frames, framerate, isloop
       this._rush.animations.add('run',
