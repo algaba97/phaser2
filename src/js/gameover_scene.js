@@ -6,7 +6,7 @@ var GameOver = {
                                           this.actionOnClick,
                                           this, 2, 1, 0);
         button.anchor.set(0.5);
-        var goText = this.game.add.text(400, 100, "GameOver");
+        var goText = this.game.add.text(400, 100, "Fin del Juego");
         var texto = this.game.add.text(0, 0, "Reset Game");
         texto.anchor.set(0.5);
         goText.anchor.set(0.5);
@@ -15,7 +15,7 @@ var GameOver = {
         //TODO 8 crear un boton con el texto 'Return Main Menu' que nos devuelva al menu del juego.
         var button2 = this.game.add.button(400, 350,
                                           'button',
-                                          this.menuOnClick, 
+                                          this.menuOnClick,
                                           this, 2, 1, 0);
         button2.anchor.set(0.5);
         var texto2 = this.game.add.text(0, 0, "Return Main Menu");
