@@ -28,9 +28,7 @@ function Personaje(x,y,escena){
 
   this.mov = function(wasJumping,movement){
     this.movimiento = movement;
-    //console.log(wasJumping);
-  //  console.log('Player estate',this.estado );
-  //  console.log('Player direcion',this.movimiento );
+
   if(wasJumping){
 
           this.estado = PlayerState.JUMP;

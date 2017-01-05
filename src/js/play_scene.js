@@ -28,35 +28,6 @@ var PlayScene = {
     //  this._rush2 = this.game.add.sprite(100,250,'enemigo');
       this._rush2 = new entidades.Enemigo(100,250,this,100,250);
 
-  //    this._rush.anchor.setTo(0.6, 0);
-      //plano de muerte
-
-/*
-      //Colisiones con el plano de muerte y con el plano de muerte y con suelo.
-
-      this.map.setCollisionBetween(1, 5000, true, 'Death');
-      this.map.setCollisionBetween(1, 5000, true, 'GroundLayer');
-      this.death.visible = false;
-      //Cambia la escala a x3.
-      //en el mapa 3 las escalas son las x2
-      //en los demas mapas al x3
-      this.groundLayer.setScale(3,3);
-      this.backgroundLayer.setScale(3,3);
-      this.death.setScale(3,3);
-
-      this.groundLayer.resizeWorld(); //resize world and adjust to the screen
-
-    //resize world and adjust to the screen
-
-
-      //nombre de la animación, frames, framerate, isloop
-      this._rush.animations.add('run',
-                    Phaser.Animation.generateFrameNames('rush_run',1,5,'',2),10,true);
-      this._rush.animations.add('stop',
-                    Phaser.Animation.generateFrameNames('rush_idle',1,1,'',2),0,false);
-      this._rush.animations.add('jump',
-                     Phaser.Animation.generateFrameNames('rush_jump',2,2,'',2),0,false);
-                     */
       this.enemys  = new Array();
     this.enemys.push(this._rush2);
       this.configure();
@@ -105,84 +76,6 @@ var PlayScene = {
         this._rush.mov(this.isJumping(collisionWithTilemap),  this.GetMovement());
 
 
-
-             //Cuando va a saltar
-
-        //transitions
-        /*
-        switch(this._playerState)
-        {
-            case PlayerState.STOP:
-            case PlayerState.RUN:
-                if(this.isJumping(collisionWithTilemap)){
-                    this._playerState = PlayerState.JUMP;
-                    this._initialJumpHeight = this._rush.y;
-                    this._rush.animations.play('jump');
-                }
-                else{
-                    if(movement !== Direction.NONE){
-                        this._playerState = PlayerState.RUN;
-                        this._rush.animations.play('run');
-                    }
-                    else{
-                        this._playerState = PlayerState.STOP;
-                        this._rush.animations.play('stop');
-                    }
-                }
-                break;
-
-            case PlayerState.JUMP:
-
-                var currentJumpHeight = this._rush.y - this._initialJumpHeight;
-                this._playerState = (currentJumpHeight*currentJumpHeight < this._jumpHight*this._jumpHight)
-                    ? PlayerState.JUMP : PlayerState.FALLING;
-                break;
-
-            case PlayerState.FALLING:
-                if(this.isStanding()){
-                    if(movement !== Direction.NONE){
-                        this._playerState = PlayerState.RUN;
-                        this._rush.animations.play('run');
-                    }
-                    else{
-                        this._playerState = PlayerState.STOP;
-                        this._rush.animations.play('stop');
-                    }
-                }
-                break;
-        }
-
-
-        //States
-        switch(this._playerState){
-
-            case PlayerState.STOP:
-                moveDirection.x = 0;
-                break;
-            case PlayerState.JUMP:
-            case PlayerState.RUN:
-            case PlayerState.FALLING:
-                if(movement === Direction.RIGHT){
-                    moveDirection.x = this._speed;
-                    if(this._rush.scale.x < 0)
-                        this._rush.scale.x *= -1;
-                }
-                else{
-                    moveDirection.x = -this._speed;
-                    if(this._rush.scale.x > 0)
-                        this._rush.scale.x *= -1;
-                }
-                if(this._playerState === PlayerState.JUMP)
-                    moveDirection.y = -this._jumpSpeed;
-                if(this._playerState === PlayerState.FALLING)
-                    moveDirection.y = 0;
-                break;
-        }
-
-        //movement
-        this.movement(moveDirection,5,
-                      this.backgroundLayer.layer.widthInPixels*this.backgroundLayer.scale.x - 10);
-                      */
         this.colision();
         this.checkPlayerFell();
     },
@@ -225,23 +118,9 @@ var PlayScene = {
     //configure the scene
     configure: function(){
         //Start the Arcade Physics systems
-        this.game.world.setBounds(0, 0, 2400, 160);
+        this.game.world.setBounds(0, 0, 3150, 700);
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.game.stage.backgroundColor = '#a9f0ff';
-      //  this.game.physics.arcade.enable(this._rush);
-      //  this.game.physics.arcade.collide(this._rush2, this.groundLayer);
-        //this.game.physics.arcade.enable(this._rush2);
-
-      //  this._rush.body.bounce.y = 0.2;
-    //    this._rush.body.gravity.y = 3300;
-//
-    //    this._rush.body.gravity.x = 0;
-    //    this._rush.body.velocity.x = 0;
-    //    this._rush.x = 10;
-      //  for( var i = 0; i < this.enemys.length; i++)this.enemys[i].body.gravity.y = 3000;
-
-
-      //  this._rush.y = +290;
 
         this.game.camera.follow(this._rush.sprite);
 
