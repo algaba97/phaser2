@@ -62,12 +62,12 @@ function Enemigo(x,y,escena,principio,fin){
     this.principio= principio;
     this.final= fin;
     this.direction= Direction.RIGTH;
-    console.log(  this.direction);
+  //  console.log(  this.direction);
     this.sprite.scale.x = -1;
 this.update= function(){
-  console.log('Posicion',this.sprite.x);
-  console.log('Principio',this.principio);
-  console.log('Final',this.final);
+//  console.log('Posicion',this.sprite.x);
+//  console.log('Principio',this.principio);
+//  console.log('Final',this.final);
     if(this.direccion != Direction.NONE)
     {
       if(this.sprite.x < this.principio) {
@@ -75,10 +75,10 @@ this.update= function(){
         this.direction = Direction.RIGTH;
       }
       else if(this.sprite.x > this.final ){
-        console.log("HA llegado a que gire cacho");
+      //  console.log("HA llegado a que gire cacho");
      this.sprite.scale.x = 1;
        this.direction = Direction.LEFT;
-       console.log(this.direction);
+      // console.log(this.direction);
      }
    }
 
@@ -100,9 +100,9 @@ module.exports = {
 var GameOver = {
     create: function () {
         console.log("Game Over");
-        var button = this.game.add.button(400, 275, 
-                                          'button', 
-                                          this.actionOnClick, 
+        var button = this.game.add.button(400, 275,
+                                          'button',
+                                          this.actionOnClick,
                                           this, 2, 1, 0);
         button.anchor.set(0.5);
         var goText = this.game.add.text(400, 100, "GameOver");
@@ -110,10 +110,10 @@ var GameOver = {
         texto.anchor.set(0.5);
         goText.anchor.set(0.5);
         button.addChild(texto);
-        
+
         //TODO 8 crear un boton con el texto 'Return Main Menu' que nos devuelva al menu del juego.
-        var button2 = this.game.add.button(400, 350, 
-                                          'button', 
+        var button2 = this.game.add.button(400, 350,
+                                          'button',
                                           this.menuOnClick, 
                                           this, 2, 1, 0);
         button2.anchor.set(0.5);
@@ -122,7 +122,7 @@ var GameOver = {
         button2.addChild(texto2);
 
     },
-  
+
     //TODO 7 declarar el callback del boton.
   actionOnClick: function(){
         this.game.state.start('play');
@@ -133,6 +133,7 @@ var GameOver = {
 };
 
 module.exports = GameOver;
+
 },{}],3:[function(require,module,exports){
 'use strict';
 
@@ -294,7 +295,7 @@ var entidades = require('./entidades.js');
 //Enumerados: PlayerState son los estado por los que pasa el player. Directions son las direcciones a las que se puede
 //mover el player.
 var PlayerState = {'JUMP':0, 'RUN':1, 'FALLING':2, 'STOP':3};
-var Direction = {'LEFT':0, 'RIGHT':1, 'NONE':3};
+var Direction = {'LEFT':0, 'RIGHT':1, 'NONE':3, 'PAUSE':4};
 
 //Scena de juego.
 var PlayScene = {
@@ -314,13 +315,14 @@ var PlayScene = {
       //TODO 4: Cargar el tilemap 'tilemap' y asignarle al tileset 'patrones' la imagen de sprites 'tiles'
       this.map = new mapa.mapa(PlayScene.nivel, this);
   //    this._rush = this.game.add.sprite(10,10,'rush');
-     this._rush = new entidades.Personaje(10,100, this);
+     this._rush = new entidades.Personaje(10,250, this);
     //  this._rush2 = this.game.add.sprite(100,250,'enemigo');
       this._rush2 = new entidades.Enemigo(100,250,this,100,250);
 
       this.enemys  = new Array();
     this.enemys.push(this._rush2);
       this.configure();
+  this.input.onDown.add(this.unpause, this);//Listener del boton de pausa
 
 
   },
@@ -338,7 +340,7 @@ var PlayScene = {
       else {
 //Falta eliminarlo del array
        this.enemys[i].sprite.destroy();
-      
+
        this.enemys.splice(i,1);
         }
       }
@@ -346,6 +348,9 @@ var PlayScene = {
   },
     //IS called one per frame.
     update: function () {
+
+      var movimiento = this.GetMovement();
+
 
       //  var moveDirection = new Phaser.Point(0, 0);
 
@@ -363,8 +368,8 @@ var PlayScene = {
 
         //Va a saltar  cuando este pulsando el boton de saltar(utilizamos la funcion que venia)
     //console.log(this.isJumping(collisionWithTilemap));
-        this._rush.mov(this.isJumping(collisionWithTilemap),  this.GetMovement());
 
+        this._rush.mov(this.isJumping(collisionWithTilemap),  movimiento);
 
         this.colision();
         this.checkPlayerFell();
@@ -403,6 +408,15 @@ var PlayScene = {
         if(this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT)){
             movement = Direction.LEFT;
         }
+        if(this.game.input.keyboard.isDown(Phaser.Keyboard.ESC)){
+           if( !this.game.paused){
+             this.game.paused= true;
+             this.pausa();
+           }
+
+
+
+        }
         return movement;
     },
     //configure the scene
@@ -411,7 +425,6 @@ var PlayScene = {
         this.game.world.setBounds(0, 0, 3150, 700);
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.game.stage.backgroundColor = '#a9f0ff';
-
         this.game.camera.follow(this._rush.sprite);
 
     },
@@ -424,10 +437,52 @@ var PlayScene = {
 
     },
 
-    //TODO 9 destruir los recursos tilemap, tiles y logo.
-    destruir:function(){
+    pausa :function(){
 
-console.log("llega aun mas");
+    this.button = this.game.add.button(this.game.camera.x+400,this.game.camera.y+ 275,
+                                        'button',
+                                        this.salir,
+                                        this, 2, 1, 0);
+      this.button.anchor.set(0.5);
+
+      var texto = this.game.add.text(0, 0, "Menu");
+      texto.anchor.set(0.5);
+      this.button.addChild(texto);
+
+      //TODO 8 crear un boton con el texto 'Return Main Menu' que nos devuelva al menu del juego.
+      this.button2 = this.game.add.button(this.game.camera.x+400, this.game.camera.y +350,
+                                        'button',
+                                        this.menuOnClick,
+                                        this, 2, 1, 0);
+      this.button2.anchor.set(0.5);
+      var texto2 = this.game.add.text(0, 0, "Continuar");
+      texto2.anchor.set(0.5);
+      this.button2.addChild(texto2);
+    },
+
+    unpause: function(event){
+      console.log("click");
+      if (this.game.paused) {
+        if (this.button.getBounds().contains(event.x, event.y)){
+             this.game.state.start('gameOver');
+             this.game.paused = false;
+           }
+    if (this.button2.getBounds().contains(event.x, event.y)) {
+
+        this.game.paused = false;
+        this.salir();
+    }
+
+ }
+    },
+    salir: function(){
+console.log("2");
+          this.button.destroy();
+          this.button2.destroy();
+          console.log("3");
+      },
+
+    destruir:function(){
        this.mapa.destroy();
        this.groundLayer.destroy();
        this.backgroundLayer.destroy();
