@@ -29,9 +29,7 @@ function Personaje(x,y,escena){
 
   this.mov = function(wasJumping,movement){
     this.movimiento = movement;
-    //console.log(wasJumping);
-  //  console.log('Player estate',this.estado );
-  //  console.log('Player direcion',this.movimiento );
+
   if(wasJumping){
 
           this.estado = PlayerState.JUMP;
@@ -249,12 +247,12 @@ function mapa (JSON, nivel){
       nivel.groundLayer = nivel.mapa.createLayer('GroundLayer');
 
 
-     nivel.mapa.setCollisionBetween(1, 5000, true, 'Death');
-      nivel.mapa.setCollisionBetween(1, 5000, true, 'GroundLayer');
+     nivel.mapa.setCollisionBetween(1, 10000, true, 'Death');
+     nivel.mapa.setCollisionBetween(1, 10000, true, 'GroundLayer');
      nivel.death.visible = false;
-     nivel.groundLayer.setScale(3,3);
-     nivel.backgroundLayer.setScale(3,3);
-     nivel.death.setScale(3,3);
+     nivel.groundLayer.setScale(2.2,2.2);
+     nivel.backgroundLayer.setScale(2.2,2.2);
+     nivel.death.setScale(2.2,2.2);
 
      nivel.groundLayer.resizeWorld();
    }
@@ -262,7 +260,6 @@ function mapa (JSON, nivel){
 module.exports = {
 mapa: mapa
 };
-
 },{}],5:[function(require,module,exports){
 var MenuScene = {
 
@@ -371,7 +368,9 @@ var PlayScene = {
 
         //Va a saltar  cuando este pulsando el boton de saltar(utilizamos la funcion que venia)
     //console.log(this.isJumping(collisionWithTilemap));
+
         this._rush.mov(this.isJumping(collisionWithTilemap),  movimiento);
+
         this.colision();
         this.checkPlayerFell();
     },
@@ -423,11 +422,9 @@ var PlayScene = {
     //configure the scene
     configure: function(){
         //Start the Arcade Physics systems
-        this.game.world.setBounds(0, 0, 2400, 160);
+        this.game.world.setBounds(0, 0, 3150, 700);
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.game.stage.backgroundColor = '#a9f0ff';
-
-
         this.game.camera.follow(this._rush.sprite);
 
     },

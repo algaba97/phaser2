@@ -12,12 +12,12 @@ function mapa (JSON, nivel){
       nivel.groundLayer = nivel.mapa.createLayer('GroundLayer');
 
 
-     nivel.mapa.setCollisionBetween(1, 5000, true, 'Death');
-      nivel.mapa.setCollisionBetween(1, 5000, true, 'GroundLayer');
+     nivel.mapa.setCollisionBetween(1, 10000, true, 'Death');
+     nivel.mapa.setCollisionBetween(1, 10000, true, 'GroundLayer');
      nivel.death.visible = false;
-     nivel.groundLayer.setScale(3,3);
-     nivel.backgroundLayer.setScale(3,3);
-     nivel.death.setScale(3,3);
+     nivel.groundLayer.setScale(2.2,2.2);
+     nivel.backgroundLayer.setScale(2.2,2.2);
+     nivel.death.setScale(2.2,2.2);
 
      nivel.groundLayer.resizeWorld();
    }

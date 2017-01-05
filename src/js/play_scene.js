@@ -77,6 +77,7 @@ var PlayScene = {
 
         //Va a saltar  cuando este pulsando el boton de saltar(utilizamos la funcion que venia)
     //console.log(this.isJumping(collisionWithTilemap));
+
         this._rush.mov(this.isJumping(collisionWithTilemap),  movimiento);
         this.colision();
         this.checkPlayerFell();
@@ -129,11 +130,9 @@ var PlayScene = {
     //configure the scene
     configure: function(){
         //Start the Arcade Physics systems
-        this.game.world.setBounds(0, 0, 2400, 160);
+        this.game.world.setBounds(0, 0, 3150, 700);
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.game.stage.backgroundColor = '#a9f0ff';
-
-
         this.game.camera.follow(this._rush.sprite);
 
     },
