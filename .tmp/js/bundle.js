@@ -64,12 +64,12 @@ function Enemigo(x,y,escena,principio,fin){
     this.principio= principio;
     this.final= fin;
     this.direction= Direction.RIGTH;
-    console.log(  this.direction);
+  //  console.log(  this.direction);
     this.sprite.scale.x = -1;
 this.update= function(){
-  console.log('Posicion',this.sprite.x);
-  console.log('Principio',this.principio);
-  console.log('Final',this.final);
+//  console.log('Posicion',this.sprite.x);
+//  console.log('Principio',this.principio);
+//  console.log('Final',this.final);
     if(this.direccion != Direction.NONE)
     {
       if(this.sprite.x < this.principio) {
@@ -77,10 +77,10 @@ this.update= function(){
         this.direction = Direction.RIGTH;
       }
       else if(this.sprite.x > this.final ){
-        console.log("HA llegado a que gire cacho");
+      //  console.log("HA llegado a que gire cacho");
      this.sprite.scale.x = 1;
        this.direction = Direction.LEFT;
-       console.log(this.direction);
+      // console.log(this.direction);
      }
    }
 
@@ -102,9 +102,9 @@ module.exports = {
 var GameOver = {
     create: function () {
         console.log("Game Over");
-        var button = this.game.add.button(400, 275, 
-                                          'button', 
-                                          this.actionOnClick, 
+        var button = this.game.add.button(400, 275,
+                                          'button',
+                                          this.actionOnClick,
                                           this, 2, 1, 0);
         button.anchor.set(0.5);
         var goText = this.game.add.text(400, 100, "GameOver");
@@ -112,10 +112,10 @@ var GameOver = {
         texto.anchor.set(0.5);
         goText.anchor.set(0.5);
         button.addChild(texto);
-        
+
         //TODO 8 crear un boton con el texto 'Return Main Menu' que nos devuelva al menu del juego.
-        var button2 = this.game.add.button(400, 350, 
-                                          'button', 
+        var button2 = this.game.add.button(400, 350,
+                                          'button',
                                           this.menuOnClick, 
                                           this, 2, 1, 0);
         button2.anchor.set(0.5);
@@ -124,7 +124,7 @@ var GameOver = {
         button2.addChild(texto2);
 
     },
-  
+
     //TODO 7 declarar el callback del boton.
   actionOnClick: function(){
         this.game.state.start('play');
@@ -135,6 +135,7 @@ var GameOver = {
 };
 
 module.exports = GameOver;
+
 },{}],3:[function(require,module,exports){
 'use strict';
 
@@ -297,7 +298,7 @@ var entidades = require('./entidades.js');
 //Enumerados: PlayerState son los estado por los que pasa el player. Directions son las direcciones a las que se puede
 //mover el player.
 var PlayerState = {'JUMP':0, 'RUN':1, 'FALLING':2, 'STOP':3};
-var Direction = {'LEFT':0, 'RIGHT':1, 'NONE':3};
+var Direction = {'LEFT':0, 'RIGHT':1, 'NONE':3, 'PAUSE':4};
 
 //Scena de juego.
 var PlayScene = {
@@ -321,38 +322,10 @@ var PlayScene = {
     //  this._rush2 = this.game.add.sprite(100,250,'enemigo');
       this._rush2 = new entidades.Enemigo(100,250,this,100,250);
 
-  //    this._rush.anchor.setTo(0.6, 0);
-      //plano de muerte
-
-/*
-      //Colisiones con el plano de muerte y con el plano de muerte y con suelo.
-
-      this.map.setCollisionBetween(1, 5000, true, 'Death');
-      this.map.setCollisionBetween(1, 5000, true, 'GroundLayer');
-      this.death.visible = false;
-      //Cambia la escala a x3.
-      //en el mapa 3 las escalas son las x2
-      //en los demas mapas al x3
-      this.groundLayer.setScale(3,3);
-      this.backgroundLayer.setScale(3,3);
-      this.death.setScale(3,3);
-
-      this.groundLayer.resizeWorld(); //resize world and adjust to the screen
-
-    //resize world and adjust to the screen
-
-
-      //nombre de la animación, frames, framerate, isloop
-      this._rush.animations.add('run',
-                    Phaser.Animation.generateFrameNames('rush_run',1,5,'',2),10,true);
-      this._rush.animations.add('stop',
-                    Phaser.Animation.generateFrameNames('rush_idle',1,1,'',2),0,false);
-      this._rush.animations.add('jump',
-                     Phaser.Animation.generateFrameNames('rush_jump',2,2,'',2),0,false);
-                     */
       this.enemys  = new Array();
     this.enemys.push(this._rush2);
       this.configure();
+  this.input.onDown.add(this.unpause, this);//Listener del boton de pausa
 
 
   },
@@ -370,7 +343,7 @@ var PlayScene = {
       else {
 //Falta eliminarlo del array
        this.enemys[i].sprite.destroy();
-      
+
        this.enemys.splice(i,1);
         }
       }
@@ -378,6 +351,9 @@ var PlayScene = {
   },
     //IS called one per frame.
     update: function () {
+
+      var movimiento = this.GetMovement();
+
 
       //  var moveDirection = new Phaser.Point(0, 0);
 
@@ -395,87 +371,7 @@ var PlayScene = {
 
         //Va a saltar  cuando este pulsando el boton de saltar(utilizamos la funcion que venia)
     //console.log(this.isJumping(collisionWithTilemap));
-        this._rush.mov(this.isJumping(collisionWithTilemap),  this.GetMovement());
-
-
-
-             //Cuando va a saltar
-
-        //transitions
-        /*
-        switch(this._playerState)
-        {
-            case PlayerState.STOP:
-            case PlayerState.RUN:
-                if(this.isJumping(collisionWithTilemap)){
-                    this._playerState = PlayerState.JUMP;
-                    this._initialJumpHeight = this._rush.y;
-                    this._rush.animations.play('jump');
-                }
-                else{
-                    if(movement !== Direction.NONE){
-                        this._playerState = PlayerState.RUN;
-                        this._rush.animations.play('run');
-                    }
-                    else{
-                        this._playerState = PlayerState.STOP;
-                        this._rush.animations.play('stop');
-                    }
-                }
-                break;
-
-            case PlayerState.JUMP:
-
-                var currentJumpHeight = this._rush.y - this._initialJumpHeight;
-                this._playerState = (currentJumpHeight*currentJumpHeight < this._jumpHight*this._jumpHight)
-                    ? PlayerState.JUMP : PlayerState.FALLING;
-                break;
-
-            case PlayerState.FALLING:
-                if(this.isStanding()){
-                    if(movement !== Direction.NONE){
-                        this._playerState = PlayerState.RUN;
-                        this._rush.animations.play('run');
-                    }
-                    else{
-                        this._playerState = PlayerState.STOP;
-                        this._rush.animations.play('stop');
-                    }
-                }
-                break;
-        }
-
-
-        //States
-        switch(this._playerState){
-
-            case PlayerState.STOP:
-                moveDirection.x = 0;
-                break;
-            case PlayerState.JUMP:
-            case PlayerState.RUN:
-            case PlayerState.FALLING:
-                if(movement === Direction.RIGHT){
-                    moveDirection.x = this._speed;
-                    if(this._rush.scale.x < 0)
-                        this._rush.scale.x *= -1;
-                }
-                else{
-                    moveDirection.x = -this._speed;
-                    if(this._rush.scale.x > 0)
-                        this._rush.scale.x *= -1;
-                }
-                if(this._playerState === PlayerState.JUMP)
-                    moveDirection.y = -this._jumpSpeed;
-                if(this._playerState === PlayerState.FALLING)
-                    moveDirection.y = 0;
-                break;
-        }
-
-        //movement
-        this.movement(moveDirection,5,
-                      this.backgroundLayer.layer.widthInPixels*this.backgroundLayer.scale.x - 10);
-                      */
+        this._rush.mov(this.isJumping(collisionWithTilemap),  movimiento);
         this.colision();
         this.checkPlayerFell();
     },
@@ -513,6 +409,15 @@ var PlayScene = {
         if(this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT)){
             movement = Direction.LEFT;
         }
+        if(this.game.input.keyboard.isDown(Phaser.Keyboard.ESC)){
+           if( !this.game.paused){
+             this.game.paused= true;
+             this.pausa();
+           }
+
+
+
+        }
         return movement;
     },
     //configure the scene
@@ -521,20 +426,7 @@ var PlayScene = {
         this.game.world.setBounds(0, 0, 2400, 160);
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.game.stage.backgroundColor = '#a9f0ff';
-      //  this.game.physics.arcade.enable(this._rush);
-      //  this.game.physics.arcade.collide(this._rush2, this.groundLayer);
-        //this.game.physics.arcade.enable(this._rush2);
 
-      //  this._rush.body.bounce.y = 0.2;
-    //    this._rush.body.gravity.y = 3300;
-//
-    //    this._rush.body.gravity.x = 0;
-    //    this._rush.body.velocity.x = 0;
-    //    this._rush.x = 10;
-      //  for( var i = 0; i < this.enemys.length; i++)this.enemys[i].body.gravity.y = 3000;
-
-
-      //  this._rush.y = +290;
 
         this.game.camera.follow(this._rush.sprite);
 
@@ -548,10 +440,52 @@ var PlayScene = {
 
     },
 
-    //TODO 9 destruir los recursos tilemap, tiles y logo.
-    destruir:function(){
+    pausa :function(){
 
-console.log("llega aun mas");
+    this.button = this.game.add.button(this.game.camera.x+400,this.game.camera.y+ 275,
+                                        'button',
+                                        this.salir,
+                                        this, 2, 1, 0);
+      this.button.anchor.set(0.5);
+
+      var texto = this.game.add.text(0, 0, "Menu");
+      texto.anchor.set(0.5);
+      this.button.addChild(texto);
+
+      //TODO 8 crear un boton con el texto 'Return Main Menu' que nos devuelva al menu del juego.
+      this.button2 = this.game.add.button(this.game.camera.x+400, this.game.camera.y +350,
+                                        'button',
+                                        this.menuOnClick,
+                                        this, 2, 1, 0);
+      this.button2.anchor.set(0.5);
+      var texto2 = this.game.add.text(0, 0, "Continuar");
+      texto2.anchor.set(0.5);
+      this.button2.addChild(texto2);
+    },
+
+    unpause: function(event){
+      console.log("click");
+      if (this.game.paused) {
+        if (this.button.getBounds().contains(event.x, event.y)){
+             this.game.state.start('gameOver');
+             this.game.paused = false;
+           }
+    if (this.button2.getBounds().contains(event.x, event.y)) {
+
+        this.game.paused = false;
+        this.salir();
+    }
+
+ }
+    },
+    salir: function(){
+console.log("2");
+          this.button.destroy();
+          this.button2.destroy();
+          console.log("3");
+      },
+
+    destruir:function(){
        this.mapa.destroy();
        this.groundLayer.destroy();
        this.backgroundLayer.destroy();
