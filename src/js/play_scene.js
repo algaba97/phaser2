@@ -1,6 +1,7 @@
 'use strict';
 var mapa = require('./mapa');
 var entidades = require('./entidades.js');
+var nivel = require('./enemigos.js');
 //Enumerados: PlayerState son los estado por los que pasa el player. Directions son las direcciones a las que se puede
 //mover el player.
 var PlayerState = {'JUMP':0, 'RUN':1, 'FALLING':2, 'STOP':3};
@@ -14,7 +15,7 @@ var PlayScene = {
     _jumpHight: 150, //altura máxima del salto.
     _playerState: PlayerState.STOP, //estado del player
     _direction: Direction.NONE,
-    nivel: 'tilemap',  //dirección inicial del player. NONE es ninguna dirección.
+    nivel: 1,  //dirección inicial del player. NONE es ninguna dirección.
 
     //Método constructor...
   create: function () {
@@ -22,12 +23,12 @@ var PlayScene = {
       //TODO 5 Creamos a rush 'rush'  con el sprite por defecto en el 10, 10 con la animación por defecto 'rush_idle01'
 
       //TODO 4: Cargar el tilemap 'tilemap' y asignarle al tileset 'patrones' la imagen de sprites 'tiles'
-      this.map = new mapa.mapa(PlayScene.nivel, this);
+      this.map = new mapa.mapa('tilemap', this);
   //    this._rush = this.game.add.sprite(10,10,'rush');
      this._rush = new entidades.Personaje(10,250, this);
     //  this._rush2 = this.game.add.sprite(100,250,'enemigo');
       this._rush2 = new entidades.Enemigo(100,250,this,100,250);
-
+      this._bandera = new entidades.Entidad('bandera',450,250,-1,this);
       this.enemys  = new Array();
     this.enemys.push(this._rush2);
       this.configure();
@@ -35,8 +36,9 @@ var PlayScene = {
 
 
   },
-  colision: function() {
 
+  colision: function() {
+this.game.physics.arcade.collide(this._bandera.sprite, this.groundLayer);
     for( var i = 0; i < this.enemys.length; i++){
 
       if(this.game.physics.arcade.collide(this.enemys[i].sprite, this._rush.sprite)){
@@ -81,6 +83,10 @@ var PlayScene = {
         this._rush.mov(this.isJumping(collisionWithTilemap),  movimiento);
         this.colision();
         this.checkPlayerFell();
+        if(this.game.physics.arcade.collide(this._bandera.sprite, this._rush.sprite)){
+          PlayScene.nivel++;
+        nivel.level(PlayScene.nivel,this);
+        }
     },
 
 
@@ -194,7 +200,9 @@ console.log("2");
        this.mapa.destroy();
        this.groundLayer.destroy();
        this.backgroundLayer.destroy();
-
+       for( var i = 0; i < this.enemys.length; i++){
+        this.enemys[i].sprite.destroy();
+       }
        this._rush.sprite.destroy();
     }
 

@@ -1,5 +1,36 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
+var mapa = require('./mapa');
+var entidades = require('./entidades.js');
+
+function level (nivel,escena){
+
+
+  escena.mapa.destroy();
+  escena.groundLayer.destroy();
+  escena.backgroundLayer.destroy();
+  for( var i = 0; i < escena.enemys.length; i++){
+   escena.enemys[i].sprite.destroy();
+  }
+  escena._rush.sprite.destroy();
+  escena._bandera.sprite.destroy();
+
+  if(nivel === 2){
+
+  escena.map = new mapa.mapa('tilemap2', escena);
+  escena._rush = new entidades.Personaje(10,200, escena);
+  escena._bandera = new entidades.Entidad('bandera',450,300,-1,escena);
+  escena.game.camera.follow(escena._rush.sprite);
+}
+  if(nivel === 3)escena.game.state.start('gameOver');
+}
+
+module.exports = {
+level: level
+};
+
+},{"./entidades.js":2,"./mapa":5}],2:[function(require,module,exports){
+'use strict';
 var Direction= {'LEFT':0, 'RIGTH':1, 'NONE':3};
 var PlayerState = {'JUMP':0, 'RUN':1, 'FALLING':2, 'STOP':3};
 var party = {enemigo : 0, personaje : 1, entidad: -1};
@@ -96,7 +127,7 @@ module.exports = {
   Enemigo: Enemigo
 };
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 var GameOver = {
     create: function () {
         console.log("Game Over");
@@ -134,7 +165,7 @@ var GameOver = {
 
 module.exports = GameOver;
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 'use strict';
 
 //TODO 1.1 Require de las escenas, play_scene, gameover_scene y menu_scene.
@@ -175,10 +206,12 @@ var PreloaderScene = {
       // el atlasJSONHash con 'images/rush_spritesheet.png' como imagen y 'images/rush_spritesheet.json'
       //como descriptor de la animación.
       this.game.load.tilemap('tilemap','images/mapa2(nuevo).json',null,Phaser.Tilemap.TILED_JSON);
+      this.game.load.tilemap('tilemap2','images/mapa3(nuevo).json',null,Phaser.Tilemap.TILED_JSON);
       this.game.load.image('tiles','images/nuevo.png');
       this.game.load.atlas('rush', 'images/rush_spritesheet.png','images/rush_spritesheet.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
 // cargar el enemigo
     this.game.load.image('enemigo','images/enemigo.png');
+    this.game.load.image('bandera','images/bandera.png');
       //TODO 2.2a Escuchar el evento onLoadComplete con el método loadComplete que el state 'play'
       this.load.onLoadComplete.add(this.loadComplete,this);
 
@@ -232,7 +265,7 @@ window.onload = function () {
   WebFont.load(wfconfig);
 };
 
-},{"./gameover_scene.js":2,"./menu_scene.js":5,"./play_scene.js":6}],4:[function(require,module,exports){
+},{"./gameover_scene.js":3,"./menu_scene.js":6,"./play_scene.js":7}],5:[function(require,module,exports){
 'use strict';
 function mapa (JSON, nivel){
 
@@ -260,7 +293,7 @@ function mapa (JSON, nivel){
 module.exports = {
 mapa: mapa
 };
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 var MenuScene = {
 
     create: function () {
@@ -288,10 +321,11 @@ var MenuScene = {
 };
 
 module.exports = MenuScene;
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 'use strict';
 var mapa = require('./mapa');
 var entidades = require('./entidades.js');
+var nivel = require('./enemigos.js');
 //Enumerados: PlayerState son los estado por los que pasa el player. Directions son las direcciones a las que se puede
 //mover el player.
 var PlayerState = {'JUMP':0, 'RUN':1, 'FALLING':2, 'STOP':3};
@@ -305,7 +339,7 @@ var PlayScene = {
     _jumpHight: 150, //altura máxima del salto.
     _playerState: PlayerState.STOP, //estado del player
     _direction: Direction.NONE,
-    nivel: 'tilemap',  //dirección inicial del player. NONE es ninguna dirección.
+    nivel: 1,  //dirección inicial del player. NONE es ninguna dirección.
 
     //Método constructor...
   create: function () {
@@ -313,12 +347,12 @@ var PlayScene = {
       //TODO 5 Creamos a rush 'rush'  con el sprite por defecto en el 10, 10 con la animación por defecto 'rush_idle01'
 
       //TODO 4: Cargar el tilemap 'tilemap' y asignarle al tileset 'patrones' la imagen de sprites 'tiles'
-      this.map = new mapa.mapa(PlayScene.nivel, this);
+      this.map = new mapa.mapa('tilemap', this);
   //    this._rush = this.game.add.sprite(10,10,'rush');
      this._rush = new entidades.Personaje(10,250, this);
     //  this._rush2 = this.game.add.sprite(100,250,'enemigo');
       this._rush2 = new entidades.Enemigo(100,250,this,100,250);
-
+      this._bandera = new entidades.Entidad('bandera',450,250,-1,this);
       this.enemys  = new Array();
     this.enemys.push(this._rush2);
       this.configure();
@@ -326,8 +360,9 @@ var PlayScene = {
 
 
   },
-  colision: function() {
 
+  colision: function() {
+this.game.physics.arcade.collide(this._bandera.sprite, this.groundLayer);
     for( var i = 0; i < this.enemys.length; i++){
 
       if(this.game.physics.arcade.collide(this.enemys[i].sprite, this._rush.sprite)){
@@ -372,6 +407,10 @@ var PlayScene = {
         this._rush.mov(this.isJumping(collisionWithTilemap),  movimiento);
         this.colision();
         this.checkPlayerFell();
+        if(this.game.physics.arcade.collide(this._bandera.sprite, this._rush.sprite)){
+          PlayScene.nivel++;
+        nivel.level(PlayScene.nivel,this);
+        }
     },
 
 
@@ -485,7 +524,9 @@ console.log("2");
        this.mapa.destroy();
        this.groundLayer.destroy();
        this.backgroundLayer.destroy();
-
+       for( var i = 0; i < this.enemys.length; i++){
+        this.enemys[i].sprite.destroy();
+       }
        this._rush.sprite.destroy();
     }
 
@@ -493,4 +534,4 @@ console.log("2");
 
 module.exports = PlayScene;
 
-},{"./entidades.js":1,"./mapa":4}]},{},[3]);
+},{"./enemigos.js":1,"./entidades.js":2,"./mapa":5}]},{},[4]);
