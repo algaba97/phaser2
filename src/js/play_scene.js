@@ -24,12 +24,13 @@ var PlayScene = {
       //TODO 4: Cargar el tilemap 'tilemap' y asignarle al tileset 'patrones' la imagen de sprites 'tiles'
       this.map = new mapa.mapa(PlayScene.nivel, this);
   //    this._rush = this.game.add.sprite(10,10,'rush');
-     this._rush = new entidades.Personaje(10,250, this);
+     this._rush = new entidades.Personaje(250,250, this);
     //  this._rush2 = this.game.add.sprite(100,250,'enemigo');
-      this._rush2 = new entidades.Enemigo(100,250,this,100,250);
-
+      this._rush2 = new entidades.Enemigo(350,250,this,250,350);
+      this._rush3 = new entidades.Enemigo(550,250,this,500,550);
       this.enemys  = new Array();
     this.enemys.push(this._rush2);
+    this.enemys.push(this._rush3);
       this.configure();
   this.input.onDown.add(this.unpause, this);//Listener del boton de pausa
 
@@ -130,7 +131,7 @@ var PlayScene = {
     //configure the scene
     configure: function(){
         //Start the Arcade Physics systems
-        this.game.world.setBounds(0, 0, 3150, 700);
+        this.game.world.setBounds(200, 0, 3100, 700);
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.game.stage.backgroundColor = '#a9f0ff';
         this.game.camera.follow(this._rush.sprite);
