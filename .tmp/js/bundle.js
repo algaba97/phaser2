@@ -12,15 +12,27 @@ function level (nivel,escena){
   for( var i = 0; i < escena.enemys.length; i++){
    escena.enemys[i].sprite.destroy();
   }
+
   escena._rush.sprite.destroy();
   escena._bandera.sprite.destroy();
 
   if(nivel === 2){
-
   escena.map = new mapa.mapa('tilemap2', escena);
-  escena._rush = new entidades.Personaje(10,200, escena);
-  escena._bandera = new entidades.Entidad('bandera',450,300,-1,escena);
+  escena.game.world.setBounds(200, 0, 3100, 700);
+  escena._rush = new entidades.Personaje(250,200, escena);
+  escena._bandera = new entidades.Entidad('bandera',3300,300,-1,escena);
   escena.game.camera.follow(escena._rush.sprite);
+  escena._rush2 = new entidades.Enemigo(600,150,escena,550,700);
+  escena._rush6 = new entidades.Enemigo(800,350,escena,720,800);
+  escena._rush3 = new entidades.Enemigo(1000,350,escena,1000,1050);
+  escena._rush4 = new entidades.Enemigo(3250,350,escena,3150,3250);
+  escena._rush5 = new entidades.Enemigo(2950,350,escena,2850,3000);
+  escena.enemys  = new Array();
+  escena.enemys.push(escena._rush2);
+  escena.enemys.push(escena._rush3);
+  escena.enemys.push(escena._rush4);
+  escena.enemys.push(escena._rush5);
+  escena.enemys.push(escena._rush6);
 }
   if(nivel === 3)escena.game.state.start('gameOver');
 }
@@ -131,19 +143,19 @@ module.exports = {
 var GameOver = {
     create: function () {
         console.log("Game Over");
-        var button = this.game.add.button(400, 275,
+        var button = this.game.add.button(600, 275,
                                           'button',
                                           this.actionOnClick,
                                           this, 2, 1, 0);
         button.anchor.set(0.5);
-        var goText = this.game.add.text(400, 100, "Fin del Juego");
+        var goText = this.game.add.text(600, 100, "Fin del Juego");
         var texto = this.game.add.text(0, 0, "Reset Game");
         texto.anchor.set(0.5);
         goText.anchor.set(0.5);
         button.addChild(texto);
 
         //TODO 8 crear un boton con el texto 'Return Main Menu' que nos devuelva al menu del juego.
-        var button2 = this.game.add.button(400, 350,
+        var button2 = this.game.add.button(600, 350,
                                           'button',
                                           this.menuOnClick,
                                           this, 2, 1, 0);
@@ -349,12 +361,23 @@ var PlayScene = {
       //TODO 4: Cargar el tilemap 'tilemap' y asignarle al tileset 'patrones' la imagen de sprites 'tiles'
       this.map = new mapa.mapa('tilemap', this);
   //    this._rush = this.game.add.sprite(10,10,'rush');
-     this._rush = new entidades.Personaje(10,250, this);
+     this._rush = new entidades.Personaje(250,250, this);
+
     //  this._rush2 = this.game.add.sprite(100,250,'enemigo');
-      this._rush2 = new entidades.Enemigo(100,250,this,100,250);
-      this._bandera = new entidades.Entidad('bandera',450,250,-1,this);
+      this._rush2 = new entidades.Enemigo(350,250,this,350,400);
+      this._rush3 = new entidades.Enemigo(600,250,this,600,650);
+      this._rush4 = new entidades.Enemigo(2600,400,this,2600,2700);
+      this._rush5 = new entidades.Enemigo(2750,400,this,2750,2850);
+      this._rush6 = new entidades.Enemigo(800,350,this,800,880);
+      //cambiar la bandera a la otra cuando este todo el segundo nivel bien
+      //this._bandera = new entidades.Entidad('bandera',3250,350,-1,this);
+      this._bandera = new entidades.Entidad('bandera',450,350,-1,this);
       this.enemys  = new Array();
     this.enemys.push(this._rush2);
+    this.enemys.push(this._rush3);
+    this.enemys.push(this._rush4);
+    this.enemys.push(this._rush5);
+    this.enemys.push(this._rush6);
       this.configure();
   this.input.onDown.add(this.unpause, this);//Listener del boton de pausa
 
@@ -460,7 +483,7 @@ this.game.physics.arcade.collide(this._bandera.sprite, this.groundLayer);
     //configure the scene
     configure: function(){
         //Start the Arcade Physics systems
-        this.game.world.setBounds(0, 0, 3150, 700);
+        this.game.world.setBounds(200, 0, 3100, 700);
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.game.stage.backgroundColor = '#a9f0ff';
         this.game.camera.follow(this._rush.sprite);
