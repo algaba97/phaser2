@@ -34,8 +34,7 @@ var PlayScene = {
       this._rush5 = new entidades.Enemigo(2750,400,this,2750,2850);
       this._rush6 = new entidades.Enemigo(800,350,this,800,880);
       //cambiar la bandera a la otra cuando este todo el segundo nivel bien
-      //this._bandera = new entidades.Entidad('bandera',3250,350,-1,this);
-      this._bandera = new entidades.Entidad('bandera',450,350,-1,this);
+      this._bandera = new entidades.Entidad('bandera',3250,350,-1,this);
       this.enemys  = new Array();
     this.enemys.push(this._rush2);
     this.enemys.push(this._rush3);
