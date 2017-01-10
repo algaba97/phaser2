@@ -152,14 +152,7 @@ this.game.physics.arcade.collide(this._bandera.sprite, this.groundLayer);
         this.game.camera.follow(this._rush.sprite);
 
     },
-    //move the player
-    movement: function(point, xMin, xMax){
-        this._rush.body.velocity = point;// * this.game.time.elapseTime;
 
-        if((this._rush.x < xMin && point.x < 0)|| (this._rush.x > xMax && point.x > 0))
-            this._rush.body.velocity.x = 0;
-
-    },
 
     pausa :function(){
 

@@ -55,12 +55,12 @@ function Entidad(nombre,x,y,party,escena){
   this.sprite.body.gravity.y = 3300;
   this.sprite.body.gravity.x = 0;
   this.sprite.body.velocity.x = 0;
-  this.party = party || party.entidad;
+  this.party = party ;
 
 };//Fin de la entidad
 
 function Personaje(x,y,escena){
-  Entidad.apply(this, ['enemigo',x, y, party.personaje,escena]);
+  Entidad.apply(this, ['personaje',x, y, party.personaje,escena]);
   this.movimiento = Direction.NONE;
   this.estado = PlayerState.FALLING;
   this.canJump = function(collisionWithTilemap){
@@ -160,7 +160,7 @@ var GameOver = {
                                           this.menuOnClick,
                                           this, 2, 1, 0);
         button2.anchor.set(0.5);
-        var texto2 = this.game.add.text(0, 0, "Return Main Menu");
+        var texto2 = this.game.add.text(0, 0, "Main Menu");
         texto2.anchor.set(0.5);
         button2.addChild(texto2);
 
@@ -223,6 +223,7 @@ var PreloaderScene = {
       this.game.load.atlas('rush', 'images/rush_spritesheet.png','images/rush_spritesheet.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
 // cargar el enemigo
     this.game.load.image('enemigo','images/enemigo.png');
+    this.game.load.image('personaje','images/personaje.png');
     this.game.load.image('bandera','images/bandera.png');
       //TODO 2.2a Escuchar el evento onLoadComplete con el método loadComplete que el state 'play'
       this.load.onLoadComplete.add(this.loadComplete,this);
@@ -370,8 +371,7 @@ var PlayScene = {
       this._rush5 = new entidades.Enemigo(2750,400,this,2750,2850);
       this._rush6 = new entidades.Enemigo(800,350,this,800,880);
       //cambiar la bandera a la otra cuando este todo el segundo nivel bien
-      //this._bandera = new entidades.Entidad('bandera',3250,350,-1,this);
-      this._bandera = new entidades.Entidad('bandera',450,350,-1,this);
+      this._bandera = new entidades.Entidad('bandera',3250,350,-1,this);
       this.enemys  = new Array();
     this.enemys.push(this._rush2);
     this.enemys.push(this._rush3);
@@ -489,14 +489,7 @@ this.game.physics.arcade.collide(this._bandera.sprite, this.groundLayer);
         this.game.camera.follow(this._rush.sprite);
 
     },
-    //move the player
-    movement: function(point, xMin, xMax){
-        this._rush.body.velocity = point;// * this.game.time.elapseTime;
 
-        if((this._rush.x < xMin && point.x < 0)|| (this._rush.x > xMax && point.x > 0))
-            this._rush.body.velocity.x = 0;
-
-    },
 
     pausa :function(){
 

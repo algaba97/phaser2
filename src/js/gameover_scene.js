@@ -18,7 +18,7 @@ var GameOver = {
                                           this.menuOnClick,
                                           this, 2, 1, 0);
         button2.anchor.set(0.5);
-        var texto2 = this.game.add.text(0, 0, "Return Main Menu");
+        var texto2 = this.game.add.text(0, 0, "Main Menu");
         texto2.anchor.set(0.5);
         button2.addChild(texto2);
 

@@ -11,12 +11,12 @@ function Entidad(nombre,x,y,party,escena){
   this.sprite.body.gravity.y = 3300;
   this.sprite.body.gravity.x = 0;
   this.sprite.body.velocity.x = 0;
-  this.party = party || party.entidad;
+  this.party = party ;
 
 };//Fin de la entidad
 
 function Personaje(x,y,escena){
-  Entidad.apply(this, ['enemigo',x, y, party.personaje,escena]);
+  Entidad.apply(this, ['personaje',x, y, party.personaje,escena]);
   this.movimiento = Direction.NONE;
   this.estado = PlayerState.FALLING;
   this.canJump = function(collisionWithTilemap){
