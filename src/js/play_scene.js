@@ -92,7 +92,7 @@ var PlayScene = {
 
 
         this.game.physics.arcade.collide(this._bandera.sprite, this.groundLayer);
-      //  this.colision();
+        this.colision();
       var collisionWithTilemap = this.game.physics.arcade.collide(this._rush.sprite, this.groundLayer);
       this._rush.mov(this.isJumping(collisionWithTilemap),  movimiento);
         this.checkPlayerFell();
