@@ -22,7 +22,7 @@ function level (nivel,escena){
   escena._rush = new entidades.Personaje(250,200, escena);
   escena._bandera = new entidades.Entidad('bandera',3300,300,-1,escena);
   escena.game.camera.follow(escena._rush.sprite);
-  escena._rush2 = new entidades.Enemigo(600,150,escena,550,700);
+  escena._rush2 = new entidades.Enemigo(600,350,escena,550,700);
   escena._rush6 = new entidades.Enemigo(800,350,escena,720,800);
   escena._rush3 = new entidades.Enemigo(1000,350,escena,1000,1050);
   escena._rush4 = new entidades.Enemigo(3250,350,escena,3150,3250);
@@ -34,7 +34,9 @@ function level (nivel,escena){
   escena.enemys.push(escena._rush5);
   escena.enemys.push(escena._rush6);
 }
-  if(nivel === 3)escena.game.state.start('gameOver');
+  if(nivel === 3){
+    escena.game.state.start('win');
+  }
 }
 
 module.exports = {
@@ -50,17 +52,17 @@ var party = {enemigo : 0, personaje : 1, entidad: -1};
 function Entidad(nombre,x,y,party,escena){
   this.sprite = escena.game.add.sprite(x, y, nombre);
   escena.game.physics.arcade.enable(this.sprite);
-  this.sprite.anchor.setTo(0.6,0);
+  this.sprite.anchor.setTo(0.5,0.0);
   this.sprite.body.bounce.y = 0.2;
-  this.sprite.body.gravity.y = 3300;
+  this.sprite.body.gravity.y = 3250;
   this.sprite.body.gravity.x = 0;
   this.sprite.body.velocity.x = 0;
-  this.party = party || party.entidad;
+  this.party = party ;
 
 };//Fin de la entidad
 
 function Personaje(x,y,escena){
-  Entidad.apply(this, ['enemigo',x, y, party.personaje,escena]);
+  Entidad.apply(this, ['personaje',x, y, party.personaje,escena]);
   this.movimiento = Direction.NONE;
   this.estado = PlayerState.FALLING;
   this.canJump = function(collisionWithTilemap){
@@ -79,7 +81,7 @@ function Personaje(x,y,escena){
           this.sprite.body.velocity.y = -900;
 
         }
-  if(this.estado === PlayerState.JUMP && this.sprite.body.velocity.y < 0)
+  if(this.sprite.body.velocity.y < 0)
    this.estado = PlayerState.FALLING;
     if(this.movimiento === Direction.NONE){
     this.sprite.body.velocity.x=0;
@@ -160,7 +162,7 @@ var GameOver = {
                                           this.menuOnClick,
                                           this, 2, 1, 0);
         button2.anchor.set(0.5);
-        var texto2 = this.game.add.text(0, 0, "Return Main Menu");
+        var texto2 = this.game.add.text(0, 0, "Main Menu");
         texto2.anchor.set(0.5);
         button2.addChild(texto2);
 
@@ -185,7 +187,8 @@ module.exports = GameOver;
 //  The Google WebFont Loader will look for this object, so create it before loading the script.
 var play_scene = require('./play_scene.js');
 var gameover_scene = require('./gameover_scene.js');
-var menu_scene = require('./menu_scene.js');;
+var menu_scene = require('./menu_scene.js');
+var win = require('./win_scene.js');
 
 
 var BootScene = {
@@ -223,7 +226,9 @@ var PreloaderScene = {
       this.game.load.atlas('rush', 'images/rush_spritesheet.png','images/rush_spritesheet.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
 // cargar el enemigo
     this.game.load.image('enemigo','images/enemigo.png');
+    this.game.load.image('personaje','images/personaje.png');
     this.game.load.image('bandera','images/bandera.png');
+    this.game.load.image('win','images/win.png');
       //TODO 2.2a Escuchar el evento onLoadComplete con el método loadComplete que el state 'play'
       this.load.onLoadComplete.add(this.loadComplete,this);
 
@@ -268,6 +273,7 @@ function init() {
   game.state.add('preloader',PreloaderScene);
   game.state.add('play',play_scene);
   game.state.add('gameOver',gameover_scene);
+  game.state.add('win',win);
   //TODO 1.2 Añadir los states 'boot' BootScene, 'menu' MenuScene, 'preloader' PreloaderScene, 'play' PlayScene, 'gameOver' GameOver.
   game.state.start('boot');
 //TODO 1.3 iniciar el state 'boot'.
@@ -277,7 +283,7 @@ window.onload = function () {
   WebFont.load(wfconfig);
 };
 
-},{"./gameover_scene.js":3,"./menu_scene.js":6,"./play_scene.js":7}],5:[function(require,module,exports){
+},{"./gameover_scene.js":3,"./menu_scene.js":6,"./play_scene.js":7,"./win_scene.js":8}],5:[function(require,module,exports){
 'use strict';
 function mapa (JSON, nivel){
 
@@ -370,8 +376,7 @@ var PlayScene = {
       this._rush5 = new entidades.Enemigo(2750,400,this,2750,2850);
       this._rush6 = new entidades.Enemigo(800,350,this,800,880);
       //cambiar la bandera a la otra cuando este todo el segundo nivel bien
-      //this._bandera = new entidades.Entidad('bandera',3250,350,-1,this);
-      this._bandera = new entidades.Entidad('bandera',450,350,-1,this);
+      this._bandera = new entidades.Entidad('bandera',3250,350,-1,this);
       this.enemys  = new Array();
     this.enemys.push(this._rush2);
     this.enemys.push(this._rush3);
@@ -385,7 +390,7 @@ var PlayScene = {
   },
 
   colision: function() {
-this.game.physics.arcade.collide(this._bandera.sprite, this.groundLayer);
+
     for( var i = 0; i < this.enemys.length; i++){
 
       if(this.game.physics.arcade.collide(this.enemys[i].sprite, this._rush.sprite)){
@@ -413,7 +418,7 @@ this.game.physics.arcade.collide(this._bandera.sprite, this.groundLayer);
       //  var moveDirection = new Phaser.Point(0, 0);
 
 
-       var collisionWithTilemap = this.game.physics.arcade.collide(this._rush.sprite, this.groundLayer);
+
        for( var i = 0; i < this.enemys.length; i++){
         this.game.physics.arcade.collide(this.enemys[i].sprite, this.groundLayer);
         this.enemys[i].update();
@@ -427,8 +432,11 @@ this.game.physics.arcade.collide(this._bandera.sprite, this.groundLayer);
         //Va a saltar  cuando este pulsando el boton de saltar(utilizamos la funcion que venia)
     //console.log(this.isJumping(collisionWithTilemap));
 
-        this._rush.mov(this.isJumping(collisionWithTilemap),  movimiento);
-        this.colision();
+
+        this.game.physics.arcade.collide(this._bandera.sprite, this.groundLayer);
+      //  this.colision();
+      var collisionWithTilemap = this.game.physics.arcade.collide(this._rush.sprite, this.groundLayer);
+      this._rush.mov(this.isJumping(collisionWithTilemap),  movimiento);
         this.checkPlayerFell();
         if(this.game.physics.arcade.collide(this._bandera.sprite, this._rush.sprite)){
           PlayScene.nivel++;
@@ -449,7 +457,7 @@ this.game.physics.arcade.collide(this._bandera.sprite, this.groundLayer);
 
   checkPlayerFell: function(){
 
-        if(this.game.physics.arcade.collide(this._rush.sprite, this.death)){
+        if(this.game.physics.arcade.collide(this._rush.sprite, this.death)||(this._rush.sprite.y > 620) ){
                //
             this.onPlayerFell();
         }
@@ -489,14 +497,7 @@ this.game.physics.arcade.collide(this._bandera.sprite, this.groundLayer);
         this.game.camera.follow(this._rush.sprite);
 
     },
-    //move the player
-    movement: function(point, xMin, xMax){
-        this._rush.body.velocity = point;// * this.game.time.elapseTime;
 
-        if((this._rush.x < xMin && point.x < 0)|| (this._rush.x > xMax && point.x > 0))
-            this._rush.body.velocity.x = 0;
-
-    },
 
     pausa :function(){
 
@@ -557,4 +558,30 @@ console.log("2");
 
 module.exports = PlayScene;
 
-},{"./enemigos.js":1,"./entidades.js":2,"./mapa":5}]},{},[4]);
+},{"./enemigos.js":1,"./entidades.js":2,"./mapa":5}],8:[function(require,module,exports){
+var win = {
+    create: function () {
+
+
+        //TODO 8 crear un boton con el texto 'Return Main Menu' que nos devuelva al menu del juego.
+        var goText = this.game.add.text(600, 100, "¡Has Ganado!");
+        var button2 = this.game.add.button(600, 350,
+                                          'button',
+                                          this.menuOnClick,
+                                          this, 2, 1, 0);
+        button2.anchor.set(0.5);
+        var texto2 = this.game.add.text(0, 0, "Main Menu");
+        texto2.anchor.set(0.5);
+        button2.addChild(texto2);
+
+    },
+
+    //TODO 7 declarar el callback del boton.
+  menuOnClick: function(){
+        this.game.state.start('menu');
+    }
+};
+
+module.exports = win;
+
+},{}]},{},[4]);

@@ -6,17 +6,17 @@ var party = {enemigo : 0, personaje : 1, entidad: -1};
 function Entidad(nombre,x,y,party,escena){
   this.sprite = escena.game.add.sprite(x, y, nombre);
   escena.game.physics.arcade.enable(this.sprite);
-  this.sprite.anchor.setTo(0.6,0);
+  this.sprite.anchor.setTo(0.5,0.0);
   this.sprite.body.bounce.y = 0.2;
-  this.sprite.body.gravity.y = 3300;
+  this.sprite.body.gravity.y = 3250;
   this.sprite.body.gravity.x = 0;
   this.sprite.body.velocity.x = 0;
-  this.party = party || party.entidad;
+  this.party = party ;
 
 };//Fin de la entidad
 
 function Personaje(x,y,escena){
-  Entidad.apply(this, ['enemigo',x, y, party.personaje,escena]);
+  Entidad.apply(this, ['personaje',x, y, party.personaje,escena]);
   this.movimiento = Direction.NONE;
   this.estado = PlayerState.FALLING;
   this.canJump = function(collisionWithTilemap){
@@ -35,7 +35,7 @@ function Personaje(x,y,escena){
           this.sprite.body.velocity.y = -900;
 
         }
-  if(this.estado === PlayerState.JUMP && this.sprite.body.velocity.y < 0)
+  if(this.sprite.body.velocity.y < 0)
    this.estado = PlayerState.FALLING;
     if(this.movimiento === Direction.NONE){
     this.sprite.body.velocity.x=0;

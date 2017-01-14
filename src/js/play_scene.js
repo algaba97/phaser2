@@ -48,7 +48,7 @@ var PlayScene = {
   },
 
   colision: function() {
-this.game.physics.arcade.collide(this._bandera.sprite, this.groundLayer);
+
     for( var i = 0; i < this.enemys.length; i++){
 
       if(this.game.physics.arcade.collide(this.enemys[i].sprite, this._rush.sprite)){
@@ -76,7 +76,7 @@ this.game.physics.arcade.collide(this._bandera.sprite, this.groundLayer);
       //  var moveDirection = new Phaser.Point(0, 0);
 
 
-       var collisionWithTilemap = this.game.physics.arcade.collide(this._rush.sprite, this.groundLayer);
+
        for( var i = 0; i < this.enemys.length; i++){
         this.game.physics.arcade.collide(this.enemys[i].sprite, this.groundLayer);
         this.enemys[i].update();
@@ -90,8 +90,11 @@ this.game.physics.arcade.collide(this._bandera.sprite, this.groundLayer);
         //Va a saltar  cuando este pulsando el boton de saltar(utilizamos la funcion que venia)
     //console.log(this.isJumping(collisionWithTilemap));
 
-        this._rush.mov(this.isJumping(collisionWithTilemap),  movimiento);
+
+        this.game.physics.arcade.collide(this._bandera.sprite, this.groundLayer);
         this.colision();
+      var collisionWithTilemap = this.game.physics.arcade.collide(this._rush.sprite, this.groundLayer);
+      this._rush.mov(this.isJumping(collisionWithTilemap),  movimiento);
         this.checkPlayerFell();
         if(this.game.physics.arcade.collide(this._bandera.sprite, this._rush.sprite)){
           PlayScene.nivel++;
@@ -112,7 +115,7 @@ this.game.physics.arcade.collide(this._bandera.sprite, this.groundLayer);
 
   checkPlayerFell: function(){
 
-        if(this.game.physics.arcade.collide(this._rush.sprite, this.death)){
+        if(this.game.physics.arcade.collide(this._rush.sprite, this.death)||(this._rush.sprite.y > 620) ){
                //
             this.onPlayerFell();
         }
@@ -152,14 +155,7 @@ this.game.physics.arcade.collide(this._bandera.sprite, this.groundLayer);
         this.game.camera.follow(this._rush.sprite);
 
     },
-    //move the player
-    movement: function(point, xMin, xMax){
-        this._rush.body.velocity = point;// * this.game.time.elapseTime;
 
-        if((this._rush.x < xMin && point.x < 0)|| (this._rush.x > xMax && point.x > 0))
-            this._rush.body.velocity.x = 0;
-
-    },
 
     pausa :function(){
 
