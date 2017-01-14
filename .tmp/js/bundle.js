@@ -361,6 +361,7 @@ var PlayScene = {
 
     //Método constructor...
   create: function () {
+
       //Creamos al player con un sprite por defecto.
       //TODO 5 Creamos a rush 'rush'  con el sprite por defecto en el 10, 10 con la animación por defecto 'rush_idle01'
       PlayScene.nivel =1;
@@ -411,19 +412,29 @@ var PlayScene = {
   },
     //IS called one per frame.
     update: function () {
+      var collisionWithTilemap = this.game.physics.arcade.collide(this._rush.sprite, this.groundLayer);
+        var salto = this.isJumping(collisionWithTilemap)
+      
+
+      this.game.physics.arcade.collide(this._bandera.sprite, this.groundLayer);
 
       var movimiento = this.GetMovement();
+
+
+
 
 
       //  var moveDirection = new Phaser.Point(0, 0);
 
 
-
+       this._rush.mov(salto,  movimiento);
        for( var i = 0; i < this.enemys.length; i++){
         this.game.physics.arcade.collide(this.enemys[i].sprite, this.groundLayer);
         this.enemys[i].update();
+
         //this.game.physics.arcade.collide(this.enemys[i], this._rush);
        }
+       this.colision();
        //var collisionWithEnemy = this.game.physics.arcade.collide(this._rush2, this.groundLayer);
   //     var marcoantonio = this.game.physics.arcade.collide(this._rush2, this._rush);
 
@@ -433,11 +444,11 @@ var PlayScene = {
     //console.log(this.isJumping(collisionWithTilemap));
 
 
-        this.game.physics.arcade.collide(this._bandera.sprite, this.groundLayer);
-      //  this.colision();
-      var collisionWithTilemap = this.game.physics.arcade.collide(this._rush.sprite, this.groundLayer);
-      this._rush.mov(this.isJumping(collisionWithTilemap),  movimiento);
-        this.checkPlayerFell();
+
+
+
+
+this.checkPlayerFell();
         if(this.game.physics.arcade.collide(this._bandera.sprite, this._rush.sprite)){
           PlayScene.nivel++;
         nivel.level(PlayScene.nivel,this);
@@ -448,9 +459,10 @@ var PlayScene = {
 
     onPlayerFell: function(){
         //TODO 6 Carga de 'gameOver';
-        console.log("llega");
-        this.game.state.start('gameOver');
+        console.log("fiiiiiin");
         this.destruir();
+        this.game.state.start('gameOver');
+
         console.log("llega mas");
 
     },
