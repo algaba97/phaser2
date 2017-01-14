@@ -13,6 +13,11 @@ function Entidad(nombre,x,y,party,escena){
     this.sprite.animations.add('idl',
                     Phaser.Animation.generateFrameNames('package_idl',1,2,'',2),2,true);
   }
+  if(nombre === 'flag'){
+    this.sprite.animations.add('move',
+                    Phaser.Animation.generateFrameNames('flag_move',1,4,'',2),5,true);
+    this.sprite.animations.play('move');
+  }
   escena.game.physics.arcade.enable(this.sprite);
   this.sprite.anchor.setTo(0.5,0.0);
   this.sprite.body.bounce.y = 0.2;
