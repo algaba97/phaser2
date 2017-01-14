@@ -72,7 +72,7 @@ var PlayScene = {
     update: function () {
       var collisionWithTilemap = this.game.physics.arcade.collide(this._rush.sprite, this.groundLayer);
         var salto = this.isJumping(collisionWithTilemap)
-      //this.checkPlayerFell();
+
 
       this.game.physics.arcade.collide(this._bandera.sprite, this.groundLayer);
 
@@ -84,6 +84,7 @@ var PlayScene = {
 
       //  var moveDirection = new Phaser.Point(0, 0);
 
+
        this._rush.mov(salto,  movimiento);
        for( var i = 0; i < this.enemys.length; i++){
         this.game.physics.arcade.collide(this.enemys[i].sprite, this.groundLayer);
@@ -93,6 +94,7 @@ var PlayScene = {
        }
        this.colision();
        this.checkPlayerFell();
+
        //var collisionWithEnemy = this.game.physics.arcade.collide(this._rush2, this.groundLayer);
   //     var marcoantonio = this.game.physics.arcade.collide(this._rush2, this._rush);
 

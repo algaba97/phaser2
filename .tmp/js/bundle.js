@@ -426,7 +426,6 @@ var PlayScene = {
     update: function () {
       var collisionWithTilemap = this.game.physics.arcade.collide(this._rush.sprite, this.groundLayer);
         var salto = this.isJumping(collisionWithTilemap)
-      //this.checkPlayerFell();
 
       this.game.physics.arcade.collide(this._bandera.sprite, this.groundLayer);
 
@@ -454,7 +453,6 @@ var PlayScene = {
 
         //Va a saltar  cuando este pulsando el boton de saltar(utilizamos la funcion que venia)
     //console.log(this.isJumping(collisionWithTilemap));
-
 
 
 
