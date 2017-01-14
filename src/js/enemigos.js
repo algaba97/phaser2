@@ -18,7 +18,7 @@ function level (nivel,escena){
   if(nivel === 2){
   escena.map = new mapa.mapa('tilemap2', escena);
   escena.game.world.setBounds(200, 0, 3100, 700);
-  escena._rush = new entidades.Personaje(250,200, escena);
+  escena._rush = new entidades.Personaje(250,170, escena);
   escena._bandera = new entidades.Entidad('bandera',3300,300,-1,escena);
   escena.game.camera.follow(escena._rush.sprite);
   escena._rush2 = new entidades.Enemigo(600,350,escena,550,700);

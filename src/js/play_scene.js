@@ -19,16 +19,17 @@ var PlayScene = {
 
     //Método constructor...
   create: function () {
+
       //Creamos al player con un sprite por defecto.
       //TODO 5 Creamos a rush 'rush'  con el sprite por defecto en el 10, 10 con la animación por defecto 'rush_idle01'
       PlayScene.nivel =1;
       //TODO 4: Cargar el tilemap 'tilemap' y asignarle al tileset 'patrones' la imagen de sprites 'tiles'
       this.map = new mapa.mapa('tilemap', this);
   //    this._rush = this.game.add.sprite(10,10,'rush');
-     this._rush = new entidades.Personaje(250,250, this);
+     this._rush = new entidades.Personaje(250,170, this);
 
     //  this._rush2 = this.game.add.sprite(100,250,'enemigo');
-      this._rush2 = new entidades.Enemigo(350,250,this,350,400);
+      this._rush2 = new entidades.Enemigo(350,170,this,350,400);
       this._rush3 = new entidades.Enemigo(600,250,this,600,650);
       this._rush4 = new entidades.Enemigo(2600,400,this,2600,2700);
       this._rush5 = new entidades.Enemigo(2750,400,this,2750,2850);
@@ -69,19 +70,29 @@ var PlayScene = {
   },
     //IS called one per frame.
     update: function () {
+      var collisionWithTilemap = this.game.physics.arcade.collide(this._rush.sprite, this.groundLayer);
+        var salto = this.isJumping(collisionWithTilemap)
+      //this.checkPlayerFell();
+
+      this.game.physics.arcade.collide(this._bandera.sprite, this.groundLayer);
 
       var movimiento = this.GetMovement();
 
 
+
+
+
       //  var moveDirection = new Phaser.Point(0, 0);
 
-
-
+       this._rush.mov(salto,  movimiento);
        for( var i = 0; i < this.enemys.length; i++){
         this.game.physics.arcade.collide(this.enemys[i].sprite, this.groundLayer);
         this.enemys[i].update();
+
         //this.game.physics.arcade.collide(this.enemys[i], this._rush);
        }
+       this.colision();
+       this.checkPlayerFell();
        //var collisionWithEnemy = this.game.physics.arcade.collide(this._rush2, this.groundLayer);
   //     var marcoantonio = this.game.physics.arcade.collide(this._rush2, this._rush);
 
@@ -91,11 +102,11 @@ var PlayScene = {
     //console.log(this.isJumping(collisionWithTilemap));
 
 
-        this.game.physics.arcade.collide(this._bandera.sprite, this.groundLayer);
-        this.colision();
-      var collisionWithTilemap = this.game.physics.arcade.collide(this._rush.sprite, this.groundLayer);
-      this._rush.mov(this.isJumping(collisionWithTilemap),  movimiento);
-        this.checkPlayerFell();
+
+
+
+
+
         if(this.game.physics.arcade.collide(this._bandera.sprite, this._rush.sprite)){
           PlayScene.nivel++;
         nivel.level(PlayScene.nivel,this);
@@ -106,9 +117,10 @@ var PlayScene = {
 
     onPlayerFell: function(){
         //TODO 6 Carga de 'gameOver';
-        console.log("llega");
-        this.game.state.start('gameOver');
+        console.log("fiiiiiin");
         this.destruir();
+        this.game.state.start('gameOver');
+
         console.log("llega mas");
 
     },
