@@ -1,0 +1,30 @@
+{
+    
+    "frames": {
+        "flag_move01": {
+            "frame": { "x": 0, "y": 0, "w": 108, "h": 100 },
+            "spriteSourceSize": { "x": 2, "y": 2, "w": 108, "h": 100 },
+            "sourceSize": { "w": 108, "h": 57 }
+        },
+        "flag_move02": {
+            "frame": { "x": 0, "y": 100, "w": 108, "h": 100 },
+            "spriteSourceSize": { "x": 2, "y": 2, "w": 108, "h": 100 },
+            "sourceSize": { "w": 108, "h": 57 }
+        },
+        "flag_move03": {
+            "frame": { "x": 0, "y": 200, "w": 108, "h": 100 },
+            "spriteSourceSize": { "x": 2, "y": 2, "w": 108, "h": 100 },
+            "sourceSize": { "w": 108, "h": 57 }
+        },
+        "flag_move04": {
+            "frame": { "x": 0, "y": 300, "w": 108, "h": 100 },
+            "spriteSourceSize": { "x": 2, "y": 2, "w": 108, "h": 100 },
+            "sourceSize": { "w": 108, "h": 57 }
+        }
+},
+"meta": {
+	"image": "flag.png",
+	"size": {"w":108,"h":1000},
+	"scale": "1"
+}
+}

@@ -20,7 +20,7 @@ function level (nivel,escena){
   escena.map = new mapa.mapa('tilemap2', escena);
   escena.game.world.setBounds(200, 0, 3100, 700);
   escena._rush = new entidades.Personaje(250,170, escena);
-  escena._bandera = new entidades.Entidad('bandera',3300,300,-1,escena);
+  escena._bandera = new entidades.Entidad('flag',3300,300,-1,escena);
   escena.game.camera.follow(escena._rush.sprite);
   escena._rush2 = new entidades.Enemigo(600,350,escena,550,700);
   escena._rush6 = new entidades.Enemigo(800,350,escena,720,800);
@@ -58,6 +58,11 @@ function Entidad(nombre,x,y,party,escena){
                     Phaser.Animation.generateFrameNames('package_jump',1,3,'',2),5,true);
     this.sprite.animations.add('idl',
                     Phaser.Animation.generateFrameNames('package_idl',1,2,'',2),2,true);
+  }
+  if(nombre === 'flag'){
+    this.sprite.animations.add('move',
+                    Phaser.Animation.generateFrameNames('flag_move',1,4,'',2),5,true);
+    this.sprite.animations.play('move');
   }
   escena.game.physics.arcade.enable(this.sprite);
   this.sprite.anchor.setTo(0.5,0.0);
@@ -236,6 +241,7 @@ var PreloaderScene = {
       this.game.load.image('tiles','images/nuevo.png');
       this.game.load.atlas('bot', 'images/running_bot.png','images/running_bot.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
       this.game.load.atlas('player', 'images/package.png','images/package.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+      this.game.load.atlas('flag', 'images/flag.png','images/flag.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
 // cargar el enemigo
     this.game.load.image('enemigo','images/enemigo.png');
     this.game.load.image('personaje','images/personaje.png');
@@ -389,7 +395,7 @@ var PlayScene = {
       this._rush5 = new entidades.Enemigo(2750,400,this,2750,2850);
       this._rush6 = new entidades.Enemigo(800,350,this,800,880);
       //cambiar la bandera a la otra cuando este todo el segundo nivel bien
-      this._bandera = new entidades.Entidad('bandera',3250,350,-1,this);
+      this._bandera = new entidades.Entidad('flag',3250,350,-1,this);
       this.enemys  = new Array();
     this.enemys.push(this._rush2);
     this.enemys.push(this._rush3);

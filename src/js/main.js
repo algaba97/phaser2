@@ -43,6 +43,7 @@ var PreloaderScene = {
       this.game.load.image('tiles','images/nuevo.png');
       this.game.load.atlas('bot', 'images/running_bot.png','images/running_bot.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
       this.game.load.atlas('player', 'images/package.png','images/package.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+      this.game.load.atlas('flag', 'images/flag.png','images/flag.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
 // cargar el enemigo
     this.game.load.image('enemigo','images/enemigo.png');
     this.game.load.image('personaje','images/personaje.png');
