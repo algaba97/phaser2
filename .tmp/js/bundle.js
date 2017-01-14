@@ -19,7 +19,7 @@ function level (nivel,escena){
   if(nivel === 2){
   escena.map = new mapa.mapa('tilemap2', escena);
   escena.game.world.setBounds(200, 0, 3100, 700);
-  escena._rush = new entidades.Personaje(250,200, escena);
+  escena._rush = new entidades.Personaje(250,170, escena);
   escena._bandera = new entidades.Entidad('bandera',3300,300,-1,escena);
   escena.game.camera.follow(escena._rush.sprite);
   escena._rush2 = new entidades.Enemigo(600,350,escena,550,700);
@@ -51,6 +51,14 @@ var party = {enemigo : 0, personaje : 1, entidad: -1};
 //entidad
 function Entidad(nombre,x,y,party,escena){
   this.sprite = escena.game.add.sprite(x, y, nombre);
+  if(nombre === 'player'){
+    this.sprite.animations.add('run',
+                    Phaser.Animation.generateFrameNames('package_run',1,3,'',2),5,true);
+    this.sprite.animations.add('jump',
+                    Phaser.Animation.generateFrameNames('package_jump',1,3,'',2),5,true);
+    this.sprite.animations.add('idl',
+                    Phaser.Animation.generateFrameNames('package_idl',1,2,'',2),2,true);
+  }
   escena.game.physics.arcade.enable(this.sprite);
   this.sprite.anchor.setTo(0.5,0.0);
   this.sprite.body.bounce.y = 0.2;
@@ -62,7 +70,7 @@ function Entidad(nombre,x,y,party,escena){
 };//Fin de la entidad
 
 function Personaje(x,y,escena){
-  Entidad.apply(this, ['personaje',x, y, party.personaje,escena]);
+  Entidad.apply(this, ['player',x, y, party.personaje,escena]);
   this.movimiento = Direction.NONE;
   this.estado = PlayerState.FALLING;
   this.canJump = function(collisionWithTilemap){
@@ -76,23 +84,25 @@ function Personaje(x,y,escena){
     this.movimiento = movement;
 
   if(wasJumping){
-
           this.estado = PlayerState.JUMP;
           this.sprite.body.velocity.y = -900;
-
+          this.sprite.animations.play('jump');
         }
   if(this.sprite.body.velocity.y < 0)
    this.estado = PlayerState.FALLING;
     if(this.movimiento === Direction.NONE){
     this.sprite.body.velocity.x=0;
+    this.sprite.animations.play('idl');
     }
     else if(this.movimiento === Direction.RIGTH){
       this.sprite.body.velocity.x=300;
-       this.sprite.scale.x = -1;
+       this.sprite.scale.x = 1;
+       this.sprite.animations.play('run');
     }
     else if(this.movimiento === Direction.LEFT){
       this.sprite.body.velocity.x=-300;
-       this.sprite.scale.x = 1;
+       this.sprite.scale.x = -1;
+       this.sprite.animations.play('run');
     }
 
 
@@ -103,10 +113,11 @@ Personaje.prototype = Object.create(Entidad.prototype);
 Personaje.prototype.constructor = Personaje;
 
 function Enemigo(x,y,escena,principio,fin){
-    Entidad.apply(this, ['enemigo',x, y, party.enemigo,escena]);
+    Entidad.apply(this, ['player',x, y, party.enemigo,escena]);
     this.principio= principio;
     this.final= fin;
     this.direction= Direction.RIGTH;
+    this.sprite.animations.play('run');
   //  console.log(  this.direction);
     this.sprite.scale.x = -1;
 this.update= function(){
@@ -116,12 +127,12 @@ this.update= function(){
     if(this.direccion != Direction.NONE)
     {
       if(this.sprite.x < this.principio) {
-      this.sprite.scale.x = -1;
+      this.sprite.scale.x = 1;
         this.direction = Direction.RIGTH;
       }
       else if(this.sprite.x > this.final ){
       //  console.log("HA llegado a que gire cacho");
-     this.sprite.scale.x = 1;
+     this.sprite.scale.x = -1;
        this.direction = Direction.LEFT;
       // console.log(this.direction);
      }
@@ -223,7 +234,8 @@ var PreloaderScene = {
       this.game.load.tilemap('tilemap','images/mapa2(nuevo).json',null,Phaser.Tilemap.TILED_JSON);
       this.game.load.tilemap('tilemap2','images/mapa3(nuevo).json',null,Phaser.Tilemap.TILED_JSON);
       this.game.load.image('tiles','images/nuevo.png');
-      this.game.load.atlas('rush', 'images/rush_spritesheet.png','images/rush_spritesheet.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+      this.game.load.atlas('bot', 'images/running_bot.png','images/running_bot.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+      this.game.load.atlas('player', 'images/package.png','images/package.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
 // cargar el enemigo
     this.game.load.image('enemigo','images/enemigo.png');
     this.game.load.image('personaje','images/personaje.png');
@@ -368,10 +380,10 @@ var PlayScene = {
       //TODO 4: Cargar el tilemap 'tilemap' y asignarle al tileset 'patrones' la imagen de sprites 'tiles'
       this.map = new mapa.mapa('tilemap', this);
   //    this._rush = this.game.add.sprite(10,10,'rush');
-     this._rush = new entidades.Personaje(250,250, this);
+     this._rush = new entidades.Personaje(250,170, this);
 
     //  this._rush2 = this.game.add.sprite(100,250,'enemigo');
-      this._rush2 = new entidades.Enemigo(350,250,this,350,400);
+      this._rush2 = new entidades.Enemigo(350,170,this,350,400);
       this._rush3 = new entidades.Enemigo(600,250,this,600,650);
       this._rush4 = new entidades.Enemigo(2600,400,this,2600,2700);
       this._rush5 = new entidades.Enemigo(2750,400,this,2750,2850);
@@ -414,7 +426,6 @@ var PlayScene = {
     update: function () {
       var collisionWithTilemap = this.game.physics.arcade.collide(this._rush.sprite, this.groundLayer);
         var salto = this.isJumping(collisionWithTilemap)
-      
 
       this.game.physics.arcade.collide(this._bandera.sprite, this.groundLayer);
 
@@ -426,7 +437,6 @@ var PlayScene = {
 
       //  var moveDirection = new Phaser.Point(0, 0);
 
-
        this._rush.mov(salto,  movimiento);
        for( var i = 0; i < this.enemys.length; i++){
         this.game.physics.arcade.collide(this.enemys[i].sprite, this.groundLayer);
@@ -435,6 +445,7 @@ var PlayScene = {
         //this.game.physics.arcade.collide(this.enemys[i], this._rush);
        }
        this.colision();
+       this.checkPlayerFell();
        //var collisionWithEnemy = this.game.physics.arcade.collide(this._rush2, this.groundLayer);
   //     var marcoantonio = this.game.physics.arcade.collide(this._rush2, this._rush);
 
@@ -448,7 +459,6 @@ var PlayScene = {
 
 
 
-this.checkPlayerFell();
         if(this.game.physics.arcade.collide(this._bandera.sprite, this._rush.sprite)){
           PlayScene.nivel++;
         nivel.level(PlayScene.nivel,this);

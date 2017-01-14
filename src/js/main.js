@@ -41,7 +41,8 @@ var PreloaderScene = {
       this.game.load.tilemap('tilemap','images/mapa2(nuevo).json',null,Phaser.Tilemap.TILED_JSON);
       this.game.load.tilemap('tilemap2','images/mapa3(nuevo).json',null,Phaser.Tilemap.TILED_JSON);
       this.game.load.image('tiles','images/nuevo.png');
-      this.game.load.atlas('rush', 'images/rush_spritesheet.png','images/rush_spritesheet.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+      this.game.load.atlas('bot', 'images/running_bot.png','images/running_bot.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+      this.game.load.atlas('player', 'images/package.png','images/package.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
 // cargar el enemigo
     this.game.load.image('enemigo','images/enemigo.png');
     this.game.load.image('personaje','images/personaje.png');
