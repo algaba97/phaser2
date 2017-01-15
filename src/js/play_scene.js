@@ -29,11 +29,11 @@ var PlayScene = {
      this._rush = new entidades.Personaje(250,170, this);
 
     //  this._rush2 = this.game.add.sprite(100,250,'enemigo');
-      this._rush2 = new entidades.Enemigo(350,170,this,350,400);
-      this._rush3 = new entidades.Enemigo(600,250,this,600,650);
-      this._rush4 = new entidades.Enemigo(2600,400,this,2600,2700);
+      this._rush2 = new entidades.Enemigo(350,170,this,360,390);
+      this._rush3 = new entidades.Enemigo(600,250,this,610,640);
+      this._rush4 = new entidades.Enemigo(2600,400,this,2550,2650);
       this._rush5 = new entidades.Enemigo(2750,400,this,2750,2850);
-      this._rush6 = new entidades.Enemigo(800,350,this,800,880);
+      this._rush6 = new entidades.Enemigo(800,350,this,810,870);
       //cambiar la bandera a la otra cuando este todo el segundo nivel bien
       this._bandera = new entidades.Entidad('flag',3250,350,-1,this);
       this.enemys  = new Array();
