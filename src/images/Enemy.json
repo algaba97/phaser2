@@ -1,0 +1,24 @@
+{"frames": {
+        "Enemy_move01": {
+            "frame": { "x": 192, "y": 0, "w": 64, "h": 64 },
+            "spriteSourceSize": { "x": 2, "y": 2, "w": 64, "h": 64},
+            "sourceSize": { "w": 64, "h": 64 }
+        },
+        "Enemy_move02": {
+            "frame": { "x": 256, "y": 0, "w": 64, "h": 64 },
+            "spriteSourceSize": { "x": 2, "y": 2, "w": 64, "h": 64 },
+            "sourceSize": { "w": 64, "h": 64 }
+        },
+        "Enemy_move03": {
+            "frame": { "x": 320, "y": 0, "w": 64, "h": 64 },
+            "spriteSourceSize": { "x": 2, "y": 2, "w": 64, "h": 64 },
+            "sourceSize": { "w": 64, "h": 64 }
+        }
+
+},
+"meta": {
+	"image": "Enemy.png",
+	"size": {"w":512,"h":192},
+	"scale": "1"
+}
+}
