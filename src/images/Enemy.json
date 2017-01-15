@@ -1,18 +1,18 @@
 {"frames": {
         "Enemy_move01": {
-            "frame": { "x": 192, "y": 0, "w": 64, "h": 64 },
-            "spriteSourceSize": { "x": 2, "y": 2, "w": 64, "h": 64},
-            "sourceSize": { "w": 64, "h": 64 }
+            "frame": { "x": 192, "y": 0, "w": 58, "h": 64 },
+            "spriteSourceSize": { "x": 2, "y": 2, "w": 58, "h": 64},
+            "sourceSize": { "w": 58, "h": 64 }
         },
         "Enemy_move02": {
-            "frame": { "x": 256, "y": 0, "w": 64, "h": 64 },
-            "spriteSourceSize": { "x": 2, "y": 2, "w": 64, "h": 64 },
-            "sourceSize": { "w": 64, "h": 64 }
+            "frame": { "x": 256, "y": 0, "w": 48, "h": 64 },
+            "spriteSourceSize": { "x": 2, "y": 2, "w": 48, "h": 64 },
+            "sourceSize": { "w": 48, "h": 64 }
         },
         "Enemy_move03": {
-            "frame": { "x": 320, "y": 0, "w": 64, "h": 64 },
-            "spriteSourceSize": { "x": 2, "y": 2, "w": 64, "h": 64 },
-            "sourceSize": { "w": 64, "h": 64 }
+            "frame": { "x": 320, "y": 0, "w": 52, "h": 64 },
+            "spriteSourceSize": { "x": 2, "y": 2, "w": 52, "h": 64 },
+            "sourceSize": { "w": 52, "h": 64 }
         }
 
 },

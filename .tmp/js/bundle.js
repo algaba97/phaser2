@@ -20,13 +20,13 @@ function level (nivel,escena){
   escena.map = new mapa.mapa('tilemap2', escena);
   escena.game.world.setBounds(200, 0, 3100, 700);
   escena._rush = new entidades.Personaje(250,170, escena);
-  escena._bandera = new entidades.Entidad('flag',3300,300,-1,escena);
+  escena._bandera = new entidades.Entidad('flag',3250,450,-1,escena);
   escena.game.camera.follow(escena._rush.sprite);
   escena._rush2 = new entidades.Enemigo(600,350,escena,550,700);
   escena._rush6 = new entidades.Enemigo(800,350,escena,720,800);
   escena._rush3 = new entidades.Enemigo(1000,350,escena,1000,1050);
-  escena._rush4 = new entidades.Enemigo(3250,350,escena,3150,3250);
-  escena._rush5 = new entidades.Enemigo(2950,350,escena,2850,3000);
+  escena._rush4 = new entidades.Enemigo(2500,450,escena,2450,2600);
+  escena._rush5 = new entidades.Enemigo(2950,450,escena,2850,3000);
   escena.enemys  = new Array();
   escena.enemys.push(escena._rush2);
   escena.enemys.push(escena._rush3);
@@ -439,6 +439,7 @@ var PlayScene = {
       var collisionWithTilemap = this.game.physics.arcade.collide(this._rush.sprite, this.groundLayer);
         var salto = this.isJumping(collisionWithTilemap)
 
+
       this.game.physics.arcade.collide(this._bandera.sprite, this.groundLayer);
 
       var movimiento = this.GetMovement();
@@ -449,6 +450,7 @@ var PlayScene = {
 
       //  var moveDirection = new Phaser.Point(0, 0);
 
+
        this._rush.mov(salto,  movimiento);
        for( var i = 0; i < this.enemys.length; i++){
         this.game.physics.arcade.collide(this.enemys[i].sprite, this.groundLayer);
@@ -458,6 +460,7 @@ var PlayScene = {
        }
        this.colision();
        this.checkPlayerFell();
+
        //var collisionWithEnemy = this.game.physics.arcade.collide(this._rush2, this.groundLayer);
   //     var marcoantonio = this.game.physics.arcade.collide(this._rush2, this._rush);
 
@@ -465,6 +468,7 @@ var PlayScene = {
 
         //Va a saltar  cuando este pulsando el boton de saltar(utilizamos la funcion que venia)
     //console.log(this.isJumping(collisionWithTilemap));
+
 
 
 
