@@ -64,6 +64,11 @@ function Entidad(nombre,x,y,party,escena){
                     Phaser.Animation.generateFrameNames('flag_move',1,4,'',2),5,true);
     this.sprite.animations.play('move');
   }
+  if(nombre === 'enemy'){
+    this.sprite.animations.add('move',
+                    Phaser.Animation.generateFrameNames('Enemy_move',1,3,'',2),5,true);
+    this.sprite.animations.play('move');
+  }
   escena.game.physics.arcade.enable(this.sprite);
   this.sprite.anchor.setTo(0.5,0.0);
   this.sprite.body.bounce.y = 0.2;
@@ -118,7 +123,7 @@ Personaje.prototype = Object.create(Entidad.prototype);
 Personaje.prototype.constructor = Personaje;
 
 function Enemigo(x,y,escena,principio,fin){
-    Entidad.apply(this, ['player',x, y, party.enemigo,escena]);
+    Entidad.apply(this, ['enemy',x, y, party.enemigo,escena]);
     this.principio= principio;
     this.final= fin;
     this.direction= Direction.RIGTH;
@@ -242,6 +247,7 @@ var PreloaderScene = {
       this.game.load.atlas('bot', 'images/running_bot.png','images/running_bot.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
       this.game.load.atlas('player', 'images/package.png','images/package.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
       this.game.load.atlas('flag', 'images/flag.png','images/flag.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
+      this.game.load.atlas('enemy', 'images/Enemy.png','images/Enemy.json', Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);
 // cargar el enemigo
     this.game.load.image('enemigo','images/enemigo.png');
     this.game.load.image('personaje','images/personaje.png');

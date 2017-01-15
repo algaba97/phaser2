@@ -18,6 +18,11 @@ function Entidad(nombre,x,y,party,escena){
                     Phaser.Animation.generateFrameNames('flag_move',1,4,'',2),5,true);
     this.sprite.animations.play('move');
   }
+  if(nombre === 'enemy'){
+    this.sprite.animations.add('move',
+                    Phaser.Animation.generateFrameNames('Enemy_move',1,3,'',2),5,true);
+    this.sprite.animations.play('move');
+  }
   escena.game.physics.arcade.enable(this.sprite);
   this.sprite.anchor.setTo(0.5,0.0);
   this.sprite.body.bounce.y = 0.2;
@@ -72,7 +77,7 @@ Personaje.prototype = Object.create(Entidad.prototype);
 Personaje.prototype.constructor = Personaje;
 
 function Enemigo(x,y,escena,principio,fin){
-    Entidad.apply(this, ['player',x, y, party.enemigo,escena]);
+    Entidad.apply(this, ['enemy',x, y, party.enemigo,escena]);
     this.principio= principio;
     this.final= fin;
     this.direction= Direction.RIGTH;

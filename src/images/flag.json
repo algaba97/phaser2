@@ -1,6 +1,4 @@
-{
-    
-    "frames": {
+{"frames": {
         "flag_move01": {
             "frame": { "x": 0, "y": 0, "w": 108, "h": 100 },
             "spriteSourceSize": { "x": 2, "y": 2, "w": 108, "h": 100 },
