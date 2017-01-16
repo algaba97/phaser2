@@ -24,6 +24,13 @@ var PlayScene = {
       //TODO 5 Creamos a rush 'rush'  con el sprite por defecto en el 10, 10 con la animación por defecto 'rush_idle01'
       PlayScene.nivel =1;
       //TODO 4: Cargar el tilemap 'tilemap' y asignarle al tileset 'patrones' la imagen de sprites 'tiles'
+        this.musica1 = this.game.add.audio('musica1');
+
+
+        this.muertenemigo = this.game.add.audio('muerteenemigo');
+        this.muerteplayer = this.game.add.audio('muerteplayer');
+        this.salto = this.game.add.audio('salto');
+      this.musica1.loopFull();
       this.map = new mapa.mapa('tilemap', this);
   //    this._rush = this.game.add.sprite(10,10,'rush');
      this._rush = new entidades.Personaje(250,170, this);
@@ -54,8 +61,8 @@ var PlayScene = {
 
       if(this.game.physics.arcade.collide(this.enemys[i].sprite, this._rush.sprite)){
 
-      if((this.enemys[i].sprite.y-40 )< this._rush.sprite.y){
-
+      if((this.enemys[i].sprite.y-40 )< this._rush.sprite.y  ){
+         this.muerteplayer.play();
          this.onPlayerFell();
       // Habrá que variarlo si cambian el tamaño de los sprites
        }
@@ -64,6 +71,7 @@ var PlayScene = {
        this.enemys[i].sprite.destroy();
 
        this.enemys.splice(i,1);
+       this.muertenemigo.play();
         }
       }
     }
@@ -217,6 +225,10 @@ console.log("2");
       },
 
     destruir:function(){
+       this.muertenemigo.destroy();
+       this.muerteplayer.destroy();
+       this.salto.destroy();
+        this.musica1.destroy();
        this.mapa.destroy();
        this.groundLayer.destroy();
        this.backgroundLayer.destroy();

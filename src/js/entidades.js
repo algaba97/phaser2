@@ -35,6 +35,7 @@ function Entidad(nombre,x,y,party,escena){
 
 function Personaje(x,y,escena){
   Entidad.apply(this, ['player',x, y, party.personaje,escena]);
+  
   this.movimiento = Direction.NONE;
   this.estado = PlayerState.FALLING;
   this.canJump = function(collisionWithTilemap){
@@ -48,27 +49,28 @@ function Personaje(x,y,escena){
     this.movimiento = movement;
 
   if(wasJumping){
+    escena.salto.play();
           this.estado = PlayerState.JUMP;
           this.sprite.body.velocity.y = -900;
           this.sprite.animations.play('jump');
         }
-  if(this.sprite.body.velocity.y < 0)
+  if(this.sprite.body.velocity.y > 0)
    this.estado = PlayerState.FALLING;
     if(this.movimiento === Direction.NONE){
     this.sprite.body.velocity.x=0;
     this.sprite.animations.play('idl');
     }
-    else if(this.movimiento === Direction.RIGTH){
+    else if(this.estado!= PlayerState.JUMP && this.movimiento === Direction.RIGTH){
       this.sprite.body.velocity.x=300;
        this.sprite.scale.x = 1;
        this.sprite.animations.play('run');
     }
-    else if(this.movimiento === Direction.LEFT){
+    else if(this.estado != PlayerState.JUMP && this.movimiento === Direction.LEFT){
       this.sprite.body.velocity.x=-300;
        this.sprite.scale.x = -1;
        this.sprite.animations.play('run');
     }
-
+console.log(this.estado)
 
   };
 

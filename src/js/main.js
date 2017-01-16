@@ -50,6 +50,11 @@ var PreloaderScene = {
     this.game.load.image('personaje','images/personaje.png');
     this.game.load.image('bandera','images/bandera.png');
     this.game.load.image('win','images/win.png');
+    this.game.load.audio('muerteenemigo', "Musica/muertenemigo.ogg");
+    this.game.load.audio('muerteplayer', "Musica/muerteplayer.ogg");
+    this.game.load.audio('musica1', "Musica/musica1.ogg");
+    this.game.load.audio('musica2', "Musica/musica2.ogg");
+    this.game.load.audio('salto', "Musica/salto.ogg");
       //TODO 2.2a Escuchar el evento onLoadComplete con el método loadComplete que el state 'play'
       this.load.onLoadComplete.add(this.loadComplete,this);
 

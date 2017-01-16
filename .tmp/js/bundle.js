@@ -81,6 +81,7 @@ function Entidad(nombre,x,y,party,escena){
 
 function Personaje(x,y,escena){
   Entidad.apply(this, ['player',x, y, party.personaje,escena]);
+  
   this.movimiento = Direction.NONE;
   this.estado = PlayerState.FALLING;
   this.canJump = function(collisionWithTilemap){
@@ -94,27 +95,28 @@ function Personaje(x,y,escena){
     this.movimiento = movement;
 
   if(wasJumping){
+    escena.salto.play();
           this.estado = PlayerState.JUMP;
           this.sprite.body.velocity.y = -900;
           this.sprite.animations.play('jump');
         }
-  if(this.sprite.body.velocity.y < 0)
+  if(this.sprite.body.velocity.y > 0)
    this.estado = PlayerState.FALLING;
     if(this.movimiento === Direction.NONE){
     this.sprite.body.velocity.x=0;
     this.sprite.animations.play('idl');
     }
-    else if(this.movimiento === Direction.RIGTH){
+    else if(this.estado!= PlayerState.JUMP && this.movimiento === Direction.RIGTH){
       this.sprite.body.velocity.x=300;
        this.sprite.scale.x = 1;
        this.sprite.animations.play('run');
     }
-    else if(this.movimiento === Direction.LEFT){
+    else if(this.estado != PlayerState.JUMP && this.movimiento === Direction.LEFT){
       this.sprite.body.velocity.x=-300;
        this.sprite.scale.x = -1;
        this.sprite.animations.play('run');
     }
-
+console.log(this.estado)
 
   };
 
@@ -165,6 +167,8 @@ module.exports = {
 },{}],3:[function(require,module,exports){
 var GameOver = {
     create: function () {
+      this.musica2 = this.game.add.audio('musica2');
+      this.musica2.loopFull();
         console.log("Game Over");
         var button = this.game.add.button(600, 275,
                                           'button',
@@ -192,9 +196,11 @@ var GameOver = {
     //TODO 7 declarar el callback del boton.
   actionOnClick: function(){
         this.game.state.start('play');
+        this.musica2.destroy();
     },
   menuOnClick: function(){
         this.game.state.start('menu');
+        this.musica2.destroy();
     }
 };
 
@@ -253,6 +259,11 @@ var PreloaderScene = {
     this.game.load.image('personaje','images/personaje.png');
     this.game.load.image('bandera','images/bandera.png');
     this.game.load.image('win','images/win.png');
+    this.game.load.audio('muerteenemigo', "Musica/muertenemigo.ogg");
+    this.game.load.audio('muerteplayer', "Musica/muerteplayer.ogg");
+    this.game.load.audio('musica1', "Musica/musica1.ogg");
+    this.game.load.audio('musica2', "Musica/musica2.ogg");
+    this.game.load.audio('salto', "Musica/salto.ogg");
       //TODO 2.2a Escuchar el evento onLoadComplete con el método loadComplete que el state 'play'
       this.load.onLoadComplete.add(this.loadComplete,this);
 
@@ -341,14 +352,14 @@ var MenuScene = {
     create: function () {
           this.game.world.setBounds(0,0,800,600);
           this.game.stage.backgroundColor = "#000000";
-        var logo = this.game.add.sprite(this.game.world.centerX, 
+        var logo = this.game.add.sprite(this.game.world.centerX,
                                         this.game.world.centerY, //Era para que quede mas estetico pero vamos que queda
                                         'logo');
         logo.anchor.setTo(0.5, 0.5);
-        var buttonStart = this.game.add.button(this.game.world.centerX, 
-                                               this.game.world.centerY+150, 
-                                               'button', 
-                                               this.actionOnClick, 
+        var buttonStart = this.game.add.button(this.game.world.centerX,
+                                               this.game.world.centerY+150,
+                                               'button',
+                                               this.actionOnClick,
                                                this, 2, 1, 0);
         buttonStart.anchor.set(0.5);
         var textStart = this.game.add.text(0, 0, "Start");
@@ -356,13 +367,14 @@ var MenuScene = {
         textStart.anchor.set(0.5);
         buttonStart.addChild(textStart);
     },
-    
+
     actionOnClick: function(){
         this.game.state.start('preloader');
-    } 
+    }
 };
 
 module.exports = MenuScene;
+
 },{}],7:[function(require,module,exports){
 'use strict';
 var mapa = require('./mapa');
@@ -390,6 +402,13 @@ var PlayScene = {
       //TODO 5 Creamos a rush 'rush'  con el sprite por defecto en el 10, 10 con la animación por defecto 'rush_idle01'
       PlayScene.nivel =1;
       //TODO 4: Cargar el tilemap 'tilemap' y asignarle al tileset 'patrones' la imagen de sprites 'tiles'
+        this.musica1 = this.game.add.audio('musica1');
+
+
+        this.muertenemigo = this.game.add.audio('muerteenemigo');
+        this.muerteplayer = this.game.add.audio('muerteplayer');
+        this.salto = this.game.add.audio('salto');
+      this.musica1.loopFull();
       this.map = new mapa.mapa('tilemap', this);
   //    this._rush = this.game.add.sprite(10,10,'rush');
      this._rush = new entidades.Personaje(250,170, this);
@@ -420,8 +439,8 @@ var PlayScene = {
 
       if(this.game.physics.arcade.collide(this.enemys[i].sprite, this._rush.sprite)){
 
-      if((this.enemys[i].sprite.y-40 )< this._rush.sprite.y){
-
+      if((this.enemys[i].sprite.y-40 )< this._rush.sprite.y  ){
+         this.muerteplayer.play();
          this.onPlayerFell();
       // Habrá que variarlo si cambian el tamaño de los sprites
        }
@@ -430,6 +449,7 @@ var PlayScene = {
        this.enemys[i].sprite.destroy();
 
        this.enemys.splice(i,1);
+       this.muertenemigo.play();
         }
       }
     }
@@ -583,6 +603,10 @@ console.log("2");
       },
 
     destruir:function(){
+       this.muertenemigo.destroy();
+       this.muerteplayer.destroy();
+       this.salto.destroy();
+        this.musica1.destroy();
        this.mapa.destroy();
        this.groundLayer.destroy();
        this.backgroundLayer.destroy();
@@ -599,7 +623,9 @@ module.exports = PlayScene;
 },{"./enemigos.js":1,"./entidades.js":2,"./mapa":5}],8:[function(require,module,exports){
 var win = {
     create: function () {
-
+  this.musica2.loopFull();
+  this.musica2 = this.game.add.audio('musica2');
+  this.musica2.loopFull();
 
         //TODO 8 crear un boton con el texto 'Return Main Menu' que nos devuelva al menu del juego.
         var goText = this.game.add.text(600, 100, "¡Has Ganado!");
@@ -617,6 +643,7 @@ var win = {
     //TODO 7 declarar el callback del boton.
   menuOnClick: function(){
         this.game.state.start('menu');
+        this.musica2.destroy();
     }
 };
 
