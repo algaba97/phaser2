@@ -67,6 +67,9 @@ function Entidad(nombre,x,y,party,escena){
   if(nombre === 'enemy'){
     this.sprite.animations.add('move',
                     Phaser.Animation.generateFrameNames('Enemy_move',1,3,'',2),5,true);
+    
+    this.sprite.animations.add('death',
+                    Phaser.Animation.generateFrameNames('Enemy_death',1,3,'',2),5,false);
     this.sprite.animations.play('move');
   }
   escena.game.physics.arcade.enable(this.sprite);
@@ -132,6 +135,9 @@ function Enemigo(x,y,escena,principio,fin){
     this.sprite.animations.play('run');
   //  console.log(  this.direction);
     this.sprite.scale.x = -1;
+    this.muerte = function(){
+      this.sprite.play('death');
+    }
 this.update= function(){
 //  console.log('Posicion',this.sprite.x);
 //  console.log('Principio',this.principio);
@@ -446,7 +452,8 @@ var PlayScene = {
        }
       else {
 //Falta eliminarlo del array
-       this.enemys[i].sprite.destroy();
+       this.enemys[i].muerte();
+       //this.enemys[i].sprite.destroy();
 
        this.enemys.splice(i,1);
        this.muertenemigo.play();

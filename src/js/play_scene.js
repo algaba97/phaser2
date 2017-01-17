@@ -68,7 +68,8 @@ var PlayScene = {
        }
       else {
 //Falta eliminarlo del array
-       this.enemys[i].sprite.destroy();
+       this.enemys[i].muerte();
+       //this.enemys[i].sprite.destroy();
 
        this.enemys.splice(i,1);
        this.muertenemigo.play();
