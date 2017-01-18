@@ -18,12 +18,12 @@ function Entidad(nombre,x,y,party,escena){
                     Phaser.Animation.generateFrameNames('flag_move',1,4,'',2),5,true);
     this.sprite.animations.play('move');
   }
-  if(nombre === 'enemy'){
+  if(nombre === 'soldier'){
     this.sprite.animations.add('move',
-                    Phaser.Animation.generateFrameNames('Enemy_move',1,3,'',2),5,true);
+                    Phaser.Animation.generateFrameNames('Soldier_move',1,3,'',2),5,true);
     
     this.sprite.animations.add('death',
-                    Phaser.Animation.generateFrameNames('Enemy_death',1,3,'',2),5,false);
+                    Phaser.Animation.generateFrameNames('Soldier_death',1,3,'',2),5,false);
     this.sprite.animations.play('move');
   }
   escena.game.physics.arcade.enable(this.sprite);
@@ -82,7 +82,7 @@ Personaje.prototype = Object.create(Entidad.prototype);
 Personaje.prototype.constructor = Personaje;
 
 function Enemigo(x,y,escena,principio,fin){
-    Entidad.apply(this, ['enemy',x, y, party.enemigo,escena]);
+    Entidad.apply(this, ['soldier',x, y, party.enemigo,escena]);
     this.principio= principio;
     this.final= fin;
     this.direction= Direction.RIGTH;
@@ -99,12 +99,12 @@ this.update= function(){
     if(this.direccion != Direction.NONE)
     {
       if(this.sprite.x < this.principio) {
-      this.sprite.scale.x = 1;
+      this.sprite.scale.x = -1;
         this.direction = Direction.RIGTH;
       }
       else if(this.sprite.x > this.final ){
       //  console.log("HA llegado a que gire cacho");
-     this.sprite.scale.x = -1;
+     this.sprite.scale.x = 1;
        this.direction = Direction.LEFT;
       // console.log(this.direction);
      }

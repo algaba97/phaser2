@@ -1,0 +1,39 @@
+{"frames": {
+    "Soldier_move01": {
+        "frame": { "x": 0, "y": 225, "w": 38, "h": 52 },
+        "spriteSourceSize": { "x": 2, "y": 2, "w": 38, "h": 52 },
+        "sourceSize": { "w": 38, "h": 52 }
+    },
+    "Soldier_move02": {
+        "frame": { "x": 116, "y": 225, "w": 50, "h": 52 },
+        "spriteSourceSize": { "x": 2, "y": 2, "w": 50, "h": 52 },
+        "sourceSize": { "w": 50, "h": 52 }
+    },
+    "Soldier_move03": {
+        "frame": { "x": 116, "y": 281, "w": 44, "h": 54 },
+        "spriteSourceSize": { "x": 2, "w": 44, "h": 54 },
+        "sourceSize": { "w": 44, "h": 54 }
+    },
+    "Soldier_death01": {
+        "frame": { "x": 58, "y": 168, "w": 58, "h": 56 },
+        "spriteSourceSize": { "x": 2, "y": 2, "w": 58, "h": 56 },
+        "sourceSize": { "w": 58, "h": 56 }
+    },
+    "Soldier_death02": {
+        "frame": { "x": 0, "y": 168, "w": 58, "h": 56},
+        "spriteSourceSize": { "x": 2, "y": 2, "w": 58, "h": 56},
+        "sourceSize": { "w": 58, "h": 56 }
+    },
+    "Soldier_death03": {
+        "frame": { "x": 0, "y": 112, "w": 58, "h": 56 },
+        "spriteSourceSize": { "x": 2, "y": 2, "w": 58, "h": 56},
+        "sourceSize": { "w": 58, "h": 56 }
+   }
+
+},
+"meta": {
+	"image": "soldier.png",
+	"size": {"w":347,"h":337},
+	"scale": "5"
+}
+}
